@@ -1,10 +1,16 @@
-import { Navigation } from 'react-native-navigation';
+import React from 'react';
+import { TabNavigator, StackNavigator } from 'react-navigation';
 
 import ScannerScreen from './ScannerScreen';
 import BarCodeInfoScreen from './BarCodeInfoScreen';
 
-// register all screens of the app (including internal ones)
-export function registerScreens() {
-  Navigation.registerComponent('GoCheaper.ScannerScreen', () => ScannerScreen);
-  Navigation.registerComponent('GoCheaper.BarCodeInfoScreen', () => BarCodeInfoScreen);
-}
+export const Root = StackNavigator(
+  {
+    Scanner: { screen: ScannerScreen },
+    BarCodeInfo: { screen: BarCodeInfoScreen },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
+);

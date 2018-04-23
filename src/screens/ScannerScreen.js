@@ -5,20 +5,30 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Vibration,
+  Platform,
+  Button,
   View
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 
 class ScannerScreen extends Component {
+
+  static navigationOptions = {
+    title: 'Some',
+    header: null
+  };
+
+
   constructor(props) {
     super(props);
+    console.log("ScannerScreen C-tor");
 
     this.state = {
       barCode: ''
     }
-    //console.log(this.props)
+
     this.onBarCodeRead = this.onBarCodeRead.bind(this);
-    //this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
   render() {
@@ -33,8 +43,10 @@ class ScannerScreen extends Component {
             }}
             style = {styles.preview}
             type={RNCamera.Constants.Type.back}
-            flashMode={RNCamera.Constants.FlashMode.off}
+            flashMode={RNCamera.Constants.FlashMode.auto}
             autoFocus={RNCamera.Constants.AutoFocus.on}
+            onCameraReady = {() => console.log("Camera READY!")}
+            onMountError={() => console.log("Cam mount error")}
             onBarCodeRead={(data) => this.onBarCodeRead(data)}
             permissionDialogTitle={'Permission to use camera'}
             permissionDialogMessage={'We need your permission to use your camera phone'}
@@ -46,16 +58,22 @@ class ScannerScreen extends Component {
   onBarCodeRead (e) {
     // return if code already scanned
     if (this.state.barCode === e.data) {
-      return;
+      return null;
     }
 
-    this.state.barCode = e.data;
-    console.log(this.state.barCode);
-
-    this.props.navigator.push({
-      screen: 'GoCheaper.BarCodeInfoScreen',
-      title: 'Bar code recognized!',
-      passProps: {barCode: this.state.barCode}
+    return this.setState({
+      barCode: e.data
+    }, () => {
+      // if (Platform.OS === 'ios') {
+      //   Vibration.vibrate(500, false);
+      // } else {
+      //   Vibration.vibrate([0, 500], false);
+      // }
+      this.setState({hideCamera:true})
+      this.props.navigation.navigate(
+        'BarCodeInfo',
+        {barCode: this.state.barCode}
+      );
     });
   };
 }

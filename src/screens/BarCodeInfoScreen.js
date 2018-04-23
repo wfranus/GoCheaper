@@ -5,21 +5,28 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  WebView
 } from 'react-native';
 
 class BarCodeInfoScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.barCode = this.props.barCode;
-    //this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    //this.barCode = this.props.navigation.state.barCode;
   }
 
   render() {
+    const { params } = this.props.navigation.state;
+    const barCode = params ? params.barCode : 'eh..'
+
     return (
       <View style={styles.container}>
-        <Text style={styles.headerText}> Bar code: {this.barCode} </Text>
+      <WebView
+        source={{uri: 'https://allegro.pl'}}
+        style={{marginTop: 20}}
+      />
+      <Text style={styles.headerText}> Bar code: {barCode} </Text>
       </View>
     );
   }

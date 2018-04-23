@@ -1,2 +1,4 @@
-__STRESS_TEST__ = false;
+import { AppRegistry } from 'react-native';
 import App from './src/App';
+
+AppRegistry.registerComponent('GoCheaper', () => App);
