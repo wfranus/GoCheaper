@@ -56,6 +56,7 @@ class ScannerScreen extends Component {
   }
 
   onBarCodeRead (e) {
+    console.log("BARCODE!")
     // return if code already scanned
     if (this.state.barCode === e.data) {
       return null;
@@ -64,11 +65,11 @@ class ScannerScreen extends Component {
     return this.setState({
       barCode: e.data
     }, () => {
-      // if (Platform.OS === 'ios') {
-      //   Vibration.vibrate(500, false);
-      // } else {
-      //   Vibration.vibrate([0, 500], false);
-      // }
+      if (Platform.OS === 'ios') {
+        Vibration.vibrate(300, false);
+      } else {
+        Vibration.vibrate([0, 300], false);
+      }
       this.setState({hideCamera:true})
       this.props.navigation.navigate(
         'BarCodeInfo',

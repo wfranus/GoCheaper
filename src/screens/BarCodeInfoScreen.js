@@ -6,28 +6,49 @@ import {
   Text,
   TouchableOpacity,
   View,
-  WebView
+  WebView,
+  ScrollView
 } from 'react-native';
+
+import GoogleSearchProductFinder from '../GoogleSearchProductFinder'
 
 class BarCodeInfoScreen extends Component {
   constructor(props) {
     super(props);
 
-    //this.barCode = this.props.navigation.state.barCode;
+    this.state = {
+      barCode: this.props.navigation.state.barCode,
+      results: "null"
+    }
+
+    this.search = GoogleSearchProductFinder.bind(this);
+  }
+
+  //FIXME: is this the right place for this?
+  componentDidMount() {
+    this.search(this.state.barCode, (results) => {
+      console.log(results);
+      this.setState(
+        { results: JSON.stringify(results) }
+      )
+    });
   }
 
   render() {
     const { params } = this.props.navigation.state;
-    const barCode = params ? params.barCode : 'eh..'
+    const barCode = params ? params.barCode : 'eh..';
 
     return (
-      <View style={styles.container}>
-      <WebView
-        source={{uri: 'https://allegro.pl'}}
-        style={{marginTop: 20}}
-      />
-      <Text style={styles.headerText}> Bar code: {barCode} </Text>
-      </View>
+      //<View style={styles.container}>
+      // <WebView
+      //   source={{uri: 'https://allegro.pl'}}
+      //   style={{marginTop: 20}}
+      // />
+      <ScrollView>
+      <Text>Google search results for bar code: {barCode}</Text>
+      <Text>{this.state.results}</Text>
+      </ScrollView>
+      //</View>
     );
   }
 }
