@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
-import { Root } from './screens/index';
+import AppNavigation from './navigators/index';
+import { Provider } from 'react-redux'
+import store from './store'
 
 
 class App extends Component {
   render() {
-    return <Root />;
+    return(
+      <Provider store={store}>
+        <AppNavigation />
+      </Provider>
+    )
   }
 }
 

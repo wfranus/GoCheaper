@@ -3,13 +3,13 @@ import {API_key, cx_key} from './API_KEYS'
 const BASE_URL = 'https://www.googleapis.com/customsearch/v1'
 
 const GoogleSearchProductFinder = function (barCode, callback) {
-
+console.log("API KEY:", API_key, "query: ", barCode);
   let queryString = objToQueryString({
       q: encodeURIComponent(barCode),
       cx: cx_key,
       key: API_key,
-      googlehost: "google.pl",
-      cr: "countryPL",
+      //googlehost: "google.pl",
+      //cr: "countryPL",
       //gl: "pl", //geolocation,
       lr: "lang_pl",
       num: 1, // Number of search results to return
