@@ -20,28 +20,22 @@ class BarCodeInfoScreen extends Component {
     super(props);
 
     this.state = {
-      //barCode: this.props.navigation.state.barCode,
       results: "null"
     }
 
     this.search = GoogleSearchProductFinder.bind(this);
-    this.allegroSearch = AllegroScrapper.bind(this);
+    this.allegroScrapper = new AllegroScrapper();
   }
 
   //FIXME: is this the right place for this?
   componentDidMount() {
-    // const { params } = this.props.navigation.state;
-    // console.log("state", params);
-    //console.log("BarCodeInfoScreen.componentDidMount barCode: ", this.state.barCode);
-
     // this.search(this.props.barCode, (results) => {
     //   console.log(results);
     //   this.setState(
     //     { results: JSON.stringify(results) }
     //   )
     // });
-
-    this.allegroSearch(this.props.barCode, (results) => {
+    this.allegroScrapper.searchForProduct(this.props.barCode, (results) => {
         this.setState(
           { results: JSON.stringify(results) }
         )
