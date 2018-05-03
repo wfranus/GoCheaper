@@ -1,6 +1,7 @@
-export function setBarCode(barCode) {
+export function setProductProp(key, value) {
   return {
     type: "SETPRODUCT",
-    barCode
+    key,
+    value
   }
 }

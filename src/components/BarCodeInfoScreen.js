@@ -7,12 +7,17 @@ import {
   TouchableOpacity,
   View,
   WebView,
-  ScrollView
+  ScrollView,
+  Image,
+  ActivityIndicator
 } from 'react-native';
 import { connect } from "react-redux";
 
-import GoogleSearchProductFinder from '../utils/GoogleSearchProductFinder'
-import AllegroScrapper from '../utils/AllegroScrapper'
+import GoogleSearchProductFinder from '../utils/GoogleSearchProductFinder';
+import AllegroScrapper from '../utils/AllegroScrapper';
+import Loader from './Loader';
+
+import {setProductProp} from "../actions/productActions"
 
 class BarCodeInfoScreen extends Component {
 
@@ -20,11 +25,13 @@ class BarCodeInfoScreen extends Component {
     super(props);
 
     this.state = {
-      results: "null"
+      loading: true,
+      results: ""
     }
 
     this.search = GoogleSearchProductFinder.bind(this);
     this.allegroScrapper = new AllegroScrapper();
+    this.allegroScrapper.searchForProduct.bind(this);
   }
 
   //FIXME: is this the right place for this?
@@ -35,10 +42,18 @@ class BarCodeInfoScreen extends Component {
     //     { results: JSON.stringify(results) }
     //   )
     // });
-    this.allegroScrapper.searchForProduct(this.props.barCode, (results) => {
-        this.setState(
-          { results: JSON.stringify(results) }
-        )
+    this.setState({
+      loading: true
+    });
+
+    this.allegroScrapper.searchForProduct(this.props.barCode, (productInfo) => {
+        if (!productInfo) return;
+
+        this.props.setProductName(productInfo.name);
+        this.props.setProductPhotoUrl(productInfo.photoUrl);
+        this.setState({
+          loading: false
+        });
     });
   }
 
@@ -46,21 +61,38 @@ class BarCodeInfoScreen extends Component {
     // const { params } = this.props.navigation.state;
     // const barCode = params ? params.barCode : 'eh..';
 
+    //<Loader loading={this.state.loading} />
+    //<ScrollView>
+          //<Text>{this.state.results}</Text>
+          //</ScrollView>
     return (
-      <ScrollView>
-      <Text>Google search results for bar code: {this.props.barCode}</Text>
-      <Text>{this.state.results}</Text>
-      </ScrollView>
+      <View style={styles.container}>
+
+      <Text>Scanned barcode: {this.props.barCode}</Text>
+      <Text>Product name: {this.props.productName}</Text>
+      <Image
+        style={{width:400, height: 300}}
+        source={{uri: this.props.photoUrl}}
+      />
+
+      </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
   //cameraTurnedOn: state.CameraReducer.turnedOn,
-  barCode: state.product.barCode
+  barCode: state.product.barCode,
+  productName: state.product.name,
+  photoUrl: state.product.photoUrl
 });
 
-export default connect(mapStateToProps)(BarCodeInfoScreen);
+const mapDispatchToProps = dispatch => ({
+  setProductName: (name) => { dispatch(setProductProp("name", name))},
+  setProductPhotoUrl: (photoUrl) => { dispatch(setProductProp("photoUrl", photoUrl))},
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BarCodeInfoScreen);
 
 const styles = StyleSheet.create({
   headerText: {

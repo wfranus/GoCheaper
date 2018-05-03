@@ -13,7 +13,7 @@ import {
 import { RNCamera } from 'react-native-camera';
 import { NavigationActions } from 'react-navigation'
 import { connect } from "react-redux";
-import {setBarCode} from "../actions/productActions"
+import {setProductProp} from "../actions/productActions"
 import {turnOnCamera, turnOffCamera} from "../actions/cameraActions"
 
 // const resetAction = NavigationActions.reset({
@@ -103,7 +103,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   turnOffCamera: () => { dispatch(turnOffCamera()) },
   turnOnCamera: () => { dispatch(turnOnCamera()) },
-  setBarCode: (newBarCode) => { dispatch(setBarCode(newBarCode))},
+  setBarCode: (newBarCode) => { dispatch(setProductProp("barCode", newBarCode))},
   showBarCodeInfoScreen: () => {
     dispatch(NavigationActions.navigate({routeName: 'BarCodeInfo'}))
   }

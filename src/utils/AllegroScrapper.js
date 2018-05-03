@@ -30,7 +30,49 @@ class AllegroScrapper {
     };
     let request = this.createSearchRequest(productStr, filters, sortOptions);
     await this.sendRequest();
-    callback(this.jsonResponse);
+
+    let productNames = this.getItemsNamesFromResponse(this.jsonResponse, 2);
+    let productName = (productNames !== null && productNames.length) ? productNames[0] : null;
+
+    callback({
+      "name": productName,
+      "photoUrl": this.getPhotoUrlOfItemFromResponse(this.jsonResponse, 0)
+    });
+  }
+
+  getItemsNamesFromResponse(response, numOfItems) {
+    let itemsList = [];
+    let itemsNames = [];
+
+    try {
+      if (numOfItems > parseInt(response["ns1:itemsCount"][0])) {
+        console.log("Not enough items in response");
+        return [];
+      }
+      itemsList = response["ns1:itemsList"][0]["ns1:item"];
+
+      if (numOfItems <= itemsList.length) {
+        for (let i=0; i < numOfItems; ++i) {
+          itemsNames.push(itemsList[i]['ns1:itemTitle'][0]);
+        }
+      }
+    } catch (e) {
+      console.log("Error while getting items names from response!: " + e);
+      return null;
+    }
+
+    return itemsNames;
+  }
+
+  getPhotoUrlOfItemFromResponse(response, itemIndex) {
+    try {
+      let url = response["ns1:itemsList"][0]["ns1:item"][itemIndex]["ns1:photosInfo"][0]["ns1:item"][2]["ns1:photoUrl"][0];
+      console.log("\nURL\n" + JSON.stringify(url));
+      return url;
+    } catch (e) {
+      console.log("Error while getting photo url from response!")
+      return null;
+    }
   }
 
   // value is of Array type
@@ -76,8 +118,9 @@ class AllegroScrapper {
 
   async sendRequest() {
     const response = await this.soapRequest.sendRequest();
-    console.log("FORMATTED RESPONSE:" + JSON.stringify(response))
+    console.log("FORMATTED RESPONSE:" + JSON.stringify(response));
     this.jsonResponse = this.parseResponse(response);
+    console.log("\nPARSED RESPONSE\n: " + JSON.stringify(this.jsonResponse));
   }
 
   parseResponse (response) {
@@ -87,7 +130,7 @@ class AllegroScrapper {
     try {
       parsedResponse = response["SOAP-ENV:Envelope"]["SOAP-ENV:Body"][0];
       let methodResponseName = Object.keys(parsedResponse)[0];
-      parsedResponse = parsedResponse[methodResponseName];
+      parsedResponse = parsedResponse[methodResponseName][0];
     } catch (e) {
       console.log("Response from Allegro API is in wrong format")
       return null;
