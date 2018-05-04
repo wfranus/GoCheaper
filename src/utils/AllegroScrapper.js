@@ -120,7 +120,7 @@ class AllegroScrapper {
     const response = await this.soapRequest.sendRequest();
     console.log("FORMATTED RESPONSE:" + JSON.stringify(response));
     this.jsonResponse = this.parseResponse(response);
-    console.log("\nPARSED RESPONSE\n: " + JSON.stringify(this.jsonResponse));
+    console.log("\nPARSED RESPONSE:\n" + JSON.stringify(this.jsonResponse));
   }
 
   parseResponse (response) {

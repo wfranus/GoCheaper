@@ -29,25 +29,20 @@ class BarCodeInfoScreen extends Component {
       results: ""
     }
 
-    this.search = GoogleSearchProductFinder.bind(this);
+    this.GoogleSearchProductFinder = new GoogleSearchProductFinder();
+    this.GoogleSearchProductFinder.searchForProduct.bind(this);
     this.allegroScrapper = new AllegroScrapper();
     this.allegroScrapper.searchForProduct.bind(this);
   }
 
   //FIXME: is this the right place for this?
   componentDidMount() {
-    // this.search(this.props.barCode, (results) => {
-    //   console.log(results);
-    //   this.setState(
-    //     { results: JSON.stringify(results) }
-    //   )
-    // });
     this.setState({
       loading: true
     });
 
-    this.allegroScrapper.searchForProduct(this.props.barCode, (productInfo) => {
-        if (!productInfo) return;
+    this.GoogleSearchProductFinder.searchForProduct(this.props.barCode, (productInfo) => {
+        if (!productInfo) {console.log("NULL"); return; }
 
         this.props.setProductName(productInfo.name);
         this.props.setProductPhotoUrl(productInfo.photoUrl);
@@ -55,26 +50,38 @@ class BarCodeInfoScreen extends Component {
           loading: false
         });
     });
+
+    // this.allegroScrapper.searchForProduct(this.props.barCode, (productInfo) => {
+    //     if (!productInfo) return;
+    //
+    //     this.props.setProductName(productInfo.name);
+    //     this.props.setProductPhotoUrl(productInfo.photoUrl);
+    //     this.setState({
+    //       loading: false
+    //     });
+    // });
   }
 
   render() {
     // const { params } = this.props.navigation.state;
     // const barCode = params ? params.barCode : 'eh..';
 
-    //<Loader loading={this.state.loading} />
     //<ScrollView>
           //<Text>{this.state.results}</Text>
           //</ScrollView>
     return (
       <View style={styles.container}>
-
-      <Text>Scanned barcode: {this.props.barCode}</Text>
-      <Text>Product name: {this.props.productName}</Text>
-      <Image
-        style={{width:400, height: 300}}
-        source={{uri: this.props.photoUrl}}
-      />
-
+        <Loader loading={this.state.loading} />
+        <View style={{flex:2}}>
+          <Text>Scanned barcode: {this.props.barCode}</Text>
+          <Text>Product name: {this.props.productName}</Text>
+        </View>
+        <View style={styles.imageView}>
+          <Image
+            style={styles.productPhoto}
+            source={{uri: this.props.photoUrl}}
+          />
+        </View>
       </View>
     );
   }
@@ -107,5 +114,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white'
+  },
+  imageView: {
+    flex: 3,
+    flexDirection: 'row'
+  },
+  productPhoto: {
+    flex: 1,
+    //width: 50,
+    height: null
   }
 });
