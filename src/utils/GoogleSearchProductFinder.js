@@ -1,6 +1,7 @@
 import {API_key, cx_key} from './API_KEYS'
 import DOMParser from 'react-native-html-parser';
 import cheerio from 'react-native-cheerio';
+import { longestCommonSubstring } from 'string-algorithms';
 
 const BASE_URL = 'https://www.googleapis.com/customsearch/v1'
 
@@ -13,7 +14,13 @@ class GoogleSearchProductFinder {
 
   async searchForProductV2(productStr, callback) {
     try {
-      let response = await fetch(`https://www.google.pl/search?q=${productStr}`, {
+      let queryString = objToQueryString({
+          q: productStr,
+          ie: "UTF-8",
+          oe: "UTF-8",
+          //tmb: "isch", // for image search
+      });
+      let response = await fetch(`https://www.google.pl/search?${queryString}`, {
         method: 'GET',
         headers:{
           'Access-Control-Allow-Origin': '*',
@@ -24,9 +31,7 @@ class GoogleSearchProductFinder {
 
       this.textResponse = await response.text();
 
-      let resultsList = this.getResultsTitlesFromHTMLresponse(this.textResponse);
-      let numResults = resultsList.length;
-      let productName = numResults ? resultsList[0] : null;
+      let productName = this.getPossibleProductName(this.textResponse, productStr);
       let photoUrl = null;
 
       callback({
@@ -91,8 +96,40 @@ class GoogleSearchProductFinder {
     $("a", "h3").each(function(i, elem) {
       results[i] = $(this).text();
     });
-    console.table(results);
+    console.log(results.toString());
     return results;
+  }
+
+  getPossibleProductName(response, barCode) {
+    let resultsList = this.getResultsTitlesFromHTMLresponse(this.textResponse);
+    if (!resultsList.length) { return "";}
+
+    // to lowercase and remove all "..."
+    resultsList = resultsList.map(t => t.toLowerCase().replace(/\.\.\./g, ""));
+
+    // delete bar code string from titles
+    if (typeof barCode !== 'undefined') {
+      re = new RegExp(barCode, "g");
+      resultsList = resultsList.map(t => t.replace(re, ""));
+      console.log("AFTER REPLACE: " + resultsList.toString());
+    }
+
+    let productName = ""
+    for (let i = 2; i <= resultsList.length; ++i) {
+      let titles = resultsList.slice(0, i); // get first i titles
+      console.log("COMPARING: " + titles.toString())
+      let commonSubStrArr = longestCommonSubstring(titles);
+      if (!commonSubStrArr.length) {break;}
+      let commonSubStr = commonSubStrArr[0];
+      //console.log("LONGEST COMMON: " + commonSubStr)
+
+      if (commonSubStr.length >= productName.length) {
+        productName = commonSubStr;
+      } else {
+        break;
+      }
+    }
+    return productName;
   }
 
   parseHTMLresponse(response) {

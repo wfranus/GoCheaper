@@ -30,7 +30,7 @@ class BarCodeInfoScreen extends Component {
     }
 
     this.GoogleSearchProductFinder = new GoogleSearchProductFinder();
-    this.GoogleSearchProductFinder.searchForProduct.bind(this);
+    this.GoogleSearchProductFinder.searchForProductV2.bind(this);
     this.allegroScrapper = new AllegroScrapper();
     this.allegroScrapper.searchForProduct.bind(this);
   }
@@ -41,7 +41,7 @@ class BarCodeInfoScreen extends Component {
       loading: true
     });
 
-    this.GoogleSearchProductFinder.searchForProduct(this.props.barCode, (productInfo) => {
+    this.GoogleSearchProductFinder.searchForProductV2(this.props.barCode, (productInfo) => {
         if (!productInfo) {console.log("NULL"); return; }
 
         this.props.setProductName(productInfo.name);
