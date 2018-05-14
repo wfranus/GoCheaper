@@ -1,4 +1,6 @@
 import {API_key, cx_key} from './API_KEYS'
+import DOMParser from 'react-native-html-parser';
+import cheerio from 'react-native-cheerio';
 
 const BASE_URL = 'https://www.googleapis.com/customsearch/v1'
 
@@ -6,6 +8,34 @@ class GoogleSearchProductFinder {
   constructor(props) {
     this.API_key = API_key;
     this.jsonResponse = null;
+    this.textResponse = null;
+  }
+
+  async searchForProductV2(productStr, callback) {
+    try {
+      let response = await fetch(`https://www.google.pl/search?q=${productStr}`, {
+        method: 'GET',
+        headers:{
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials':true,
+          'Access-Control-Allow-Methods':'POST, GET'
+        }
+      });
+
+      this.textResponse = await response.text();
+
+      let resultsList = this.getResultsTitlesFromHTMLresponse(this.textResponse);
+      let numResults = resultsList.length;
+      let productName = numResults ? resultsList[0] : null;
+      let photoUrl = null;
+
+      callback({
+        "name": productName,
+        "photoUrl": photoUrl
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async searchForProduct(productStr, callback) {
@@ -13,19 +43,20 @@ class GoogleSearchProductFinder {
         q: encodeURIComponent(productStr),
         cx: cx_key,
         key: API_key,
-        searchType: "image",
-        imgType: "photo",
+        //searchType: "image",
+        //imgType: "photo",
         //googlehost: "google.pl",
         //cr: "countryPL",
         //gl: "pl", //geolocation,
         //lr: "lang_pl",
         filter: 0,
-        num: 3, // Number of search results to return
+        num: 1, // Number of search results to return
         //start: 0, // error when set to 0 ???
     });
 
     try {
       console.log("SEND");
+
       let response = await fetch(`${BASE_URL}?${queryString}`, {
         method: 'GET',
         headers:{
@@ -51,6 +82,23 @@ class GoogleSearchProductFinder {
     } catch(error) {
       console.log(error);
     }
+  }
+
+  getResultsTitlesFromHTMLresponse(response) {
+    const $ = cheerio.load(response)
+    console.log("PARSED RESULTS:");
+    let results = [];
+    $("a", "h3").each(function(i, elem) {
+      results[i] = $(this).text();
+    });
+    console.table(results);
+    return results;
+  }
+
+  parseHTMLresponse(response) {
+    // const parser = new DOMParser.DOMParser();
+    // const doc = parser.parseFromString(response, 'text/html');
+    // console.log(doc.getElementsByTagName('a'));
   }
 
   getNumOfResultsFromResponse(response) {
@@ -100,6 +148,8 @@ class GoogleSearchProductFinder {
       return null;
     }
   }
+
+  create
 }
 
 function objToQueryString(obj) {
