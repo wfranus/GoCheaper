@@ -5,3 +5,9 @@ export function setProductProp(key, value) {
     value
   }
 }
+
+export function resetProduct() {
+  return {
+    type: "RESETPRODUCT"
+  }
+}

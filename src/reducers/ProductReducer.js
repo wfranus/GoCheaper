@@ -15,6 +15,8 @@ const ProductReducer = (state = initialState, action) => {
       return { ...state, ...nextState};
 
       //return { ...state, action.barCode}
+    case 'RESETPRODUCT':
+      return initialState;
     default:
       return state;
   }

@@ -137,6 +137,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-spinkit')
+    compile project(':react-native-vector-icons')
     compile project(':react-native-camera')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
@@ -156,3 +158,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

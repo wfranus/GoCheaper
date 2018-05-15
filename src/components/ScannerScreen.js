@@ -13,23 +13,13 @@ import {
 import { RNCamera } from 'react-native-camera';
 import { NavigationActions } from 'react-navigation'
 import { connect } from "react-redux";
-import {setProductProp} from "../actions/productActions"
+import {setProductProp, resetProduct} from "../actions/productActions"
 import {turnOnCamera, turnOffCamera} from "../actions/cameraActions"
-
-// const resetAction = NavigationActions.reset({
-//   index: 0,
-//   actions: [
-//     NavigationActions.navigate({ routeName: 'BarCodeInfo'}),
-//     NavigationActions.navigate({ routeName: 'Scanner'})
-//   ]
-// })
-
 
 
 class ScannerScreenView extends Component {
 
   static navigationOptions = {
-    title: 'Some title',
     header: null
   };
 
@@ -37,25 +27,25 @@ class ScannerScreenView extends Component {
     super(props);
     console.log("ScannerScreen C-tor");
 
-    // this.state = {
-    //   barCode: '',
-    //   cameraTurnedOn: props.cameraTurnedOn,
-    // }
-
+    this.onShowingUp = this.onShowingUp.bind(this);
     this.onBarCodeRead = this.onBarCodeRead.bind(this);
   }
 
-  // componentDidMount() {
-  //   console.log("ScannerScreen didMount!")
-  //   //InteractionManager.runAfterInteractions(() => this.setState({ ready: true });
-  // }
+  onShowingUp() {
+    this.props.turnOnCamera();
+    this.props.resetProduct();
+  }
 
+  // <View style={{flex:1, justifyContent: 'center', backgroundColor: 'white'}}>
+  //   <Text>{this.props.barCode}</Text>
+  // </View>
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}> GoCheaper </Text>
         </View>
+
         {this.props.cameraTurnedOn && <RNCamera
             ref={ref => {
               this.camera = ref;
@@ -90,8 +80,7 @@ class ScannerScreenView extends Component {
     }
 
     this.props.turnOffCamera();
-    //this.props.showBarCodeInfoScreen();
-    this.props.navigation.navigate('BarCodeInfo');
+    this.props.navigation.navigate('BarCodeInfo', {onGoBack: this.onShowingUp.bind(this)});
   };
 }
 
@@ -103,10 +92,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   turnOffCamera: () => { dispatch(turnOffCamera()) },
   turnOnCamera: () => { dispatch(turnOnCamera()) },
+  resetProduct: () => {dispatch(resetProduct())},
   setBarCode: (newBarCode) => { dispatch(setProductProp("barCode", newBarCode))},
-  showBarCodeInfoScreen: () => {
-    dispatch(NavigationActions.navigate({routeName: 'BarCodeInfo'}))
-  }
 });
 
 const ScannerScreen = connect(mapStateToProps, mapDispatchToProps)(ScannerScreenView);
@@ -130,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   preview: {
-    flex: 1,
+    flex: 3,
     justifyContent: 'flex-end',
     alignItems: 'center'
   }

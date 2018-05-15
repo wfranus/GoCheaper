@@ -12,6 +12,7 @@ class GoogleSearchProductFinder {
     this.textResponse = null;
   }
 
+  /** Search with the use of Google Search **/
   async searchForProductV2(productStr, callback) {
     try {
       let queryString = objToQueryString({
@@ -43,9 +44,10 @@ class GoogleSearchProductFinder {
     }
   }
 
+  /** Search with the use of Google Custom Search API **/
   async searchForProduct(productStr, callback) {
     let queryString = objToQueryString({
-        q: encodeURIComponent(productStr),
+        q: productStr,
         cx: cx_key,
         key: API_key,
         //searchType: "image",
@@ -91,12 +93,12 @@ class GoogleSearchProductFinder {
 
   getResultsTitlesFromHTMLresponse(response) {
     const $ = cheerio.load(response)
-    console.log("PARSED RESULTS:");
+    //console.log("PARSED RESULTS:");
     let results = [];
     $("a", "h3").each(function(i, elem) {
       results[i] = $(this).text();
     });
-    console.log(results.toString());
+    //console.log(results.toString());
     return results;
   }
 
@@ -111,13 +113,13 @@ class GoogleSearchProductFinder {
     if (typeof barCode !== 'undefined') {
       re = new RegExp(barCode, "g");
       resultsList = resultsList.map(t => t.replace(re, ""));
-      console.log("AFTER REPLACE: " + resultsList.toString());
+      //console.log("AFTER REPLACE: " + resultsList.toString());
     }
 
     let productName = ""
     for (let i = 2; i <= resultsList.length; ++i) {
       let titles = resultsList.slice(0, i); // get first i titles
-      console.log("COMPARING: " + titles.toString())
+      //console.log("COMPARING: " + titles.toString())
       let commonSubStrArr = longestCommonSubstring(titles);
       if (!commonSubStrArr.length) {break;}
       let commonSubStr = commonSubStrArr[0];
@@ -185,8 +187,6 @@ class GoogleSearchProductFinder {
       return null;
     }
   }
-
-  create
 }
 
 function objToQueryString(obj) {

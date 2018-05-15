@@ -3,8 +3,10 @@ import {
   StyleSheet,
   View,
   Modal,
+  Text,
   ActivityIndicator
 } from 'react-native';
+let Spinner = require('react-native-spinkit');
 
 class Loader extends Component {
   constructor(props) {
@@ -12,7 +14,6 @@ class Loader extends Component {
   }
 
   render() {
-
     return (
       <Modal
         transparent={true}
@@ -21,8 +22,11 @@ class Loader extends Component {
         onRequestClose={() => {console.log('close modal')}}>
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
-            <ActivityIndicator
-              animating={this.props.loading} />
+            <Text style={styles.message}>{this.props.message}</Text>
+            <Spinner
+              type="ThreeBounce"
+              size={80}
+              isVisible={this.props.loading} />
           </View>
         </View>
       </Modal>
@@ -36,16 +40,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    backgroundColor: '#00000040'
+    backgroundColor: 'rgb(59, 59, 59)'//'#00000040'
   },
   activityIndicatorWrapper: {
-    backgroundColor: '#FFFFFF',
-    height: 100,
-    width: 100,
+    backgroundColor: 'rgb(211, 216, 254)',//'#FFFFFF',
+    height: 200,
+    width: 200,
     borderRadius: 10,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'center'
+  },
+  message: {
+    color: 'black',
+    fontFamily: 'monospace',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    // textShadowColor: 'rgb(54, 54, 54)',
+    // textShadowOffset: {width: -1, height: 1},
+    // textShadowRadius: 10
   }
 });
 
