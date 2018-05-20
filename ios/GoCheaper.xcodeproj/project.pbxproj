@@ -52,6 +52,9 @@
 		A63C08AEC2984985BDA66274 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7E081828ADBF41D695AE282F /* SimpleLineIcons.ttf */; };
 		213748B6AB324FFDB8877B94 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 53CCDBC7957C401DA5DEACD8 /* Zocial.ttf */; };
 		71094F70ADA240B19FDF404D /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F60F94D05CBB408EAFF4FA62 /* libRNSpinkit.a */; };
+		86442556D69D4C7D95514A24 /* Autobus-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70047AF5AC59438BAB2F605B /* Autobus-Bold.ttf */; };
+		C045CE1B1556429EB506F845 /* AutobusBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF36FC6C72D34BB0871D474F /* AutobusBold.ttf */; };
+		1B6E68FFB9AA43648FAB4477 /* Dancing Script.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB82C675A28D4A4F8B13D072 /* Dancing Script.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -376,6 +379,9 @@
 		53CCDBC7957C401DA5DEACD8 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		6261E99BCE2B43A1B0AE46FF /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; name = "RNSpinkit.xcodeproj"; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		F60F94D05CBB408EAFF4FA62 /* libRNSpinkit.a */ = {isa = PBXFileReference; name = "libRNSpinkit.a"; path = "libRNSpinkit.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		70047AF5AC59438BAB2F605B /* Autobus-Bold.ttf */ = {isa = PBXFileReference; name = "Autobus-Bold.ttf"; path = "../assets/fonts/Autobus-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BF36FC6C72D34BB0871D474F /* AutobusBold.ttf */ = {isa = PBXFileReference; name = "AutobusBold.ttf"; path = "../assets/fonts/AutobusBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EB82C675A28D4A4F8B13D072 /* Dancing Script.ttf */ = {isa = PBXFileReference; name = "Dancing Script.ttf"; path = "../assets/fonts/Dancing Script.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -660,6 +666,9 @@
 				FEDE2D38D8274DD0B22450A5 /* Octicons.ttf */,
 				7E081828ADBF41D695AE282F /* SimpleLineIcons.ttf */,
 				53CCDBC7957C401DA5DEACD8 /* Zocial.ttf */,
+				70047AF5AC59438BAB2F605B /* Autobus-Bold.ttf */,
+				BF36FC6C72D34BB0871D474F /* AutobusBold.ttf */,
+				EB82C675A28D4A4F8B13D072 /* Dancing Script.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1122,6 +1131,9 @@
 				FC8279658AB34FE5B91D021F /* Octicons.ttf in Resources */,
 				A63C08AEC2984985BDA66274 /* SimpleLineIcons.ttf in Resources */,
 				213748B6AB324FFDB8877B94 /* Zocial.ttf in Resources */,
+				86442556D69D4C7D95514A24 /* Autobus-Bold.ttf in Resources */,
+				C045CE1B1556429EB506F845 /* AutobusBold.ttf in Resources */,
+				1B6E68FFB9AA43648FAB4477 /* Dancing Script.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

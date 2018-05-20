@@ -6,17 +6,13 @@ import {
   Text,
   ActivityIndicator
 } from 'react-native';
-import { WaveIndicator } from 'react-native-indicators';
+import { DotIndicator } from 'react-native-indicators';
 
 class Loader extends Component {
   constructor(props) {
     super(props);
   }
 
-  // <Spinner
-  //   type="ThreeBounce"
-  //   size={80}
-  //   isVisible={this.props.loading} />
   render() {
     return (
       <Modal
@@ -27,8 +23,9 @@ class Loader extends Component {
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
             <Text style={styles.message}>{this.props.message}</Text>
-            <WaveIndicator
-              size={80}
+            <DotIndicator
+              count={3}
+              size={12}
               animating={this.props.loading} />
           </View>
         </View>
@@ -49,20 +46,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(211, 216, 254)',//'#FFFFFF',
     height: 200,
     width: 200,
+    padding: 20,
     borderRadius: 10,
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent:'space-around',
+    alignItems:'center',
   },
   message: {
     color: 'black',
-    fontFamily: 'monospace',
+    //fontFamily: 'monospace',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    // textShadowColor: 'rgb(54, 54, 54)',
-    // textShadowOffset: {width: -1, height: 1},
-    // textShadowRadius: 10
   }
 });
 
