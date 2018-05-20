@@ -11,6 +11,7 @@ import {
   View
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
+import { Icon } from 'react-native-elements';
 import { NavigationActions } from 'react-navigation'
 import { connect } from "react-redux";
 import {setProductProp, resetProduct} from "../actions/productActions"
@@ -19,9 +20,20 @@ import {turnOnCamera, turnOffCamera} from "../actions/cameraActions"
 
 class ScannerScreenView extends Component {
 
-  static navigationOptions = {
-    header: null
-  };
+  // /* NAVIGATION */
+  // static navigationOptions = ({ navigation, screenProps }) => ({
+  //   headerTitleStyle: {
+  //     flex:1,
+  //     fontSize: 30,
+  //     fontWeight: '200',
+  //     fontFamily: 'AutobusBold',
+  //     textAlign: 'center',
+  //     marginRight: 40
+  //   },
+  //   headerRight: <Icon name={'settings'}
+  //                      iconStyle={{marginRight: 10}}
+  //                      onPress={ () => { navigation.navigate('Settings') }} />,
+  // });
 
   constructor(props) {
     super(props);
@@ -42,10 +54,6 @@ class ScannerScreenView extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}> GoCheaper </Text>
-        </View>
-
         {this.props.cameraTurnedOn && <RNCamera
             ref={ref => {
               this.camera = ref;
@@ -99,18 +107,6 @@ const mapDispatchToProps = dispatch => ({
 const ScannerScreen = connect(mapStateToProps, mapDispatchToProps)(ScannerScreenView);
 
 const styles = StyleSheet.create({
-  header: {
-    flex: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(85, 233, 237, 1)'
-  },
-  headerText: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    fontFamily: 'Helvetica',
-    textShadowColor: '#fff'
-  },
   container: {
     flex: 1,
     flexDirection: 'column',

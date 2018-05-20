@@ -1,3 +1,4 @@
+'use strict'
 import {API_key, cx_key} from './API_KEYS'
 import DOMParser from 'react-native-html-parser';
 import cheerio from 'react-native-cheerio';
@@ -109,35 +110,43 @@ class GoogleSearchProductFinder {
     // to lowercase and remove all "..."
     resultsList = resultsList.map(t => t.toLowerCase().replace(/\.\.\./g, ""));
 
+    // delete 'Obrazy dla <barCode>' from results list
+    let toDel = 'obrazy dla';
+    resultsList = resultsList.filter(item => {return item.indexOf(toDel) == -1;});
+
     // delete bar code string from titles
     if (typeof barCode !== 'undefined') {
-      re = new RegExp(barCode, "g");
+      let re = new RegExp(barCode, "g");
       resultsList = resultsList.map(t => t.replace(re, ""));
-      //console.log("AFTER REPLACE: " + resultsList.toString());
     }
 
-    let productName = ""
-    for (let i = 2; i <= resultsList.length; ++i) {
-      let titles = resultsList.slice(0, i); // get first i titles
-      //console.log("COMPARING: " + titles.toString())
-      let commonSubStrArr = longestCommonSubstring(titles);
-      if (!commonSubStrArr.length) {break;}
-      let commonSubStr = commonSubStrArr[0];
-      //console.log("LONGEST COMMON: " + commonSubStr)
+    // compute longest common substring for all unique result pairs
+    // and choose the longest of them
+    let howMany = Math.min(4, resultsList.length);
+    let cmnStrList = [];
 
-      if (commonSubStr.length >= productName.length) {
-        productName = commonSubStr;
-      } else {
-        break;
+    console.log("searching within ", howMany)
+    for (let i=0; i < howMany; ++i) {
+      for (let j=i+1; j < howMany; ++j) {
+        let resPair = [resultsList[i], resultsList[j]];
+        cmnStrList = cmnStrList.concat(longestCommonSubstring(resPair));
       }
     }
-    return productName;
-  }
 
-  parseHTMLresponse(response) {
-    // const parser = new DOMParser.DOMParser();
-    // const doc = parser.parseFromString(response, 'text/html');
-    // console.log(doc.getElementsByTagName('a'));
+    console.log("Lonest common strings: ", cmnStrList.toString());
+    let productName = cmnStrList.reduce((p, c) => p.length > c.length ? p : c);
+
+    // filtering
+    //TODO: usunac myslniki, sprawdzic dlugosc nazwy czy nie za krotka
+    productName = productName.trim();
+    console.log("longest: ", productName);
+
+    let minLen = 3;
+    if (productName.length < minLen) {
+      return "";
+    }
+    
+    return productName;
   }
 
   getNumOfResultsFromResponse(response) {

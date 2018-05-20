@@ -12,7 +12,8 @@ import {
   ActivityIndicator,
   TextInput
 } from 'react-native';
-import { Icon, Button } from 'react-native-elements'
+import { Icon, Button, Divider } from 'react-native-elements';
+import colors from './config/colors';
 import Modal from "react-native-modal";
 import { connect } from "react-redux";
 import Loader from './Loader';
@@ -24,13 +25,14 @@ class BarCodeInfoScreen extends Component {
 
   /* NAVIGATION */
   static navigationOptions = ({ navigation, screenProps }) => ({
-      title:  'Header Title',
-      headerLeft: <Icon name={'arrow-back'}
-                        onPress={ () => {
-                          navigation.goBack(null);
-                          navigation.state.params.onGoBack() }} />,
-      headerRight: <Icon name={'settings'}
-                         onPress={ () => { navigation.navigate('Settings') }} />,
+    headerLeft: <Icon name={'arrow-back'}
+                      iconStyle={{marginLeft: 10}}
+                      onPress={ () => {
+                        navigation.goBack(null);
+                        navigation.state.params.onGoBack() }} />,
+    headerRight: <Icon name={'settings'}
+                       iconStyle={{marginRight: 10}}
+                       onPress={ () => { navigation.navigate('Settings') }} />,
   });
 
   constructor(props) {
@@ -67,49 +69,53 @@ class BarCodeInfoScreen extends Component {
         showPriceModal: false
       });
       this.props.setProductPrice(price);
-      //TODO: call Allegro search here
+      this.props.navigation.navigate('SavingsSummary');
   }
 
   render() {
+    const {
+      barCode,
+      productName,
+      userPrice
+    } = this.props;
+
     return (
       <View style={styles.container}>
         <Loader
           loading={this.state.loading}
           message="Rozpoznawanie produktu"/>
         {!this.state.loading && <View style={styles.container}>
-          <View style={styles.barCodeView}>
-            <Text style={styles.barCode}>{this.props.barCode}</Text>
-          </View>
-          <View style={styles.productNameView}>
-            <Text style={styles.productName}>{this.props.productName}</Text>
-          </View>
-          <View style={styles.buttonsView}>
+          <View style={styles.productInfoView}>
+          <Text style={styles.label}>Kod kreskowy:</Text>
+            <Text style={styles.barCode}>{barCode}</Text>
+            <Text style={styles.label}>Nazwa produktu:</Text>
+            <Text style={styles.productName}>{productName}</Text>
             <Button
-              raised
-              containerViewStyle={styles.buttonContainer}
-              buttonStyle={styles.buttonOk}
-              textStyle={styles.buttonText}
-              rounded={true}
-              outline={true}
-              onPress={() => this.setState({showPriceModal: true})}
-              icon={{name: 'done', size:20, color:'black'}}
-              title='OK' />
-            <Button
-              raised
               containerViewStyle={styles.buttonContainer}
               buttonStyle={styles.buttonWrong}
-              textStyle={styles.buttonText}
-              rounded={true}
-              icon={{name: 'edit', size:20, color:'black'}}
-              title='Wpisz nazwę' />
+              titleStyle={styles.buttonText}
+              icon={{name: 'edit', size:15, color:'black'}}
+              title='Popraw' />
+          </View>
+          <Divider style={{backgroundColor: 'black', marginTop: 10 }} />
+          <View style={styles.buttonsView}>
+            <Text style={styles.label}>Twoja cena:</Text>
+            <Text style={styles.productName}>{userPrice.toFixed(2)} zł</Text>
+            <Button
+              containerViewStyle={styles.buttonContainer}
+              buttonStyle={styles.buttonOk}
+              titleStyle={styles.buttonText}
+              onPress={() => this.setState({showPriceModal: true})}
+              icon={{name: 'usd', type:'font-awesome', size:20, color:'black', paddingLeft: 5}}
+              title='Wpisz swoją cenę' />
           </View>
         </View>}
         <Modal
           isVisible={this.state.showPriceModal}
           animationIn="bounceIn"
           animationInTiming={600}
-          animationOut="bounceOut"
-          animationInTiming={600}
+          // animationOut="bounceOut"
+          // animationInTiming={600}
           style={{justifyContent: 'space-around', alignItems: 'center'}}
           onBackButtonPress={() => this.setState({showPriceModal:false})}
           onBackdropPress={() => this.setState({showPriceModal:false})}
@@ -126,6 +132,7 @@ class BarCodeInfoScreen extends Component {
 const mapStateToProps = state => ({
   barCode: state.product.barCode,
   productName: state.product.name,
+  userPrice: state.product.userPrice,
   photoUrl: state.product.photoUrl
 });
 
@@ -140,59 +147,69 @@ export default connect(mapStateToProps, mapDispatchToProps)(BarCodeInfoScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    margin: 15,
+    borderRadius: 10,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',
-    backgroundColor: 'rgb(235, 234, 181)'
+    backgroundColor: 'white'
   },
-  barCodeView: {
+  productInfoView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    backgroundColor: 'rgb(129, 249, 195)'
-  },
-  productNameView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    backgroundColor: 'rgb(186, 61, 219)'
+    margin: 15,
+    marginBottom: 0,
+    justifyContent:'space-around',
+    alignItems: 'center',
+    //backgroundColor: 'rgb(242, 242, 242)',
   },
   buttonsView: {
-    flex: 2,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent:'space-around',
     alignItems: 'center',
-    backgroundColor: 'rgb(36, 108, 134)'
+    backgroundColor: 'white'//'rgb(36, 108, 134)'
+  },
+  label: {
+    textAlign: 'center',
+    fontSize: 15,
+    fontWeight: 'bold',
+    fontFamily: 'Helvetica',
   },
   barCode: {
-    alignSelf: 'center',
-    fontSize: 20,
+    textAlign: 'center',
+    fontSize: 17,
     fontWeight: 'bold',
     fontFamily: 'Helvetica',
+    marginBottom: 20,
+    color: 'black'
   },
   productName: {
-    alignSelf: 'center',
-    fontSize: 20,
+    textAlign: 'center',
+    fontSize: 17,
     fontWeight: 'bold',
     fontFamily: 'Helvetica',
+    color: 'black',
+    //marginBottom: 10,
   },
   buttonContainer: {
     borderRadius: 7
   },
   buttonOk: {
-    backgroundColor: 'rgb(66, 255, 0)',
+    backgroundColor: 'white',
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: 'black',
+    borderColor: colors.green,
   },
   buttonWrong: {
-    backgroundColor: 'rgba(230, 20, 20, 0.1)',
+    backgroundColor: 'white',
     borderRadius: 5,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: 'black',
+    paddingLeft: 5,
+    paddingRight: 5
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: 15,
     color: 'black',
     fontWeight: 'bold',
     fontFamily: 'Helvetica',

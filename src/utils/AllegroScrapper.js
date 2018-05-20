@@ -28,28 +28,59 @@ class AllegroScrapper {
       "sortType": "price", // endingTime/startingTime/price/priceDelivery/popularity/name/relevance
       "sortOrder": "asc" // scd/desc
     };
-    let request = this.createSearchRequest(productStr, filters, sortOptions);
+    let request = this.createSearchRequest(filters, sortOptions);
     await this.sendRequest();
 
-    let productNames = this.getItemsNamesFromResponse(this.jsonResponse, 2);
+    let productNames = this.getItemsNames(2);
     let productName = (productNames !== null && productNames.length) ? productNames[0] : null;
 
     callback({
       "name": productName,
-      "photoUrl": this.getPhotoUrlOfItemFromResponse(this.jsonResponse, 0)
+      "photoUrl": this.getPhotoUrlOfItem(0)
     });
   }
 
-  getItemsNamesFromResponse(response, numOfItems) {
+  async getMinPriceForItem(productName, callback) {
+    let filters = [
+      this.createFilter("search", [productName]), //TODO: escape special chars?
+      this.createFilter("description", ["true"]),
+      this.createFilter("condition", ["new"]),
+      // this.createFilter("price", null, 1.0, 100.0),
+      this.createFilter("offerType", ["buyNow"]), //buyNow/auction
+      // this.createFilter("departament", ["fashionBeauty"]),
+      // this.createFilter("category", [1]), //category is int
+    ];
+    let sortOptions = {
+      "sortType": "price", // endingTime/startingTime/price/priceDelivery/popularity/name/relevance
+      "sortOrder": "asc" // scd/desc
+    };
+    let request = this.createSearchRequest(filters, sortOptions);
+    await this.sendRequest();
+
+    callback({
+      "minPrice": this.getLowestPrice() || 0.0,
+      "resultsNum": this.getItemsCount() || 0
+    });
+  }
+
+  getItemsCount() {
+    try {
+      return parseInt(this.jsonResponse["ns1:itemsCount"][0]);
+    } catch (e) {
+      console.log("Error while getting items count from response: " + e);
+      return null;
+    }
+  }
+  getItemsNames(numOfItems) {
     let itemsList = [];
     let itemsNames = [];
 
     try {
-      if (numOfItems > parseInt(response["ns1:itemsCount"][0])) {
+      if (numOfItems > getItemsCountFromResponse()) {
         console.log("Not enough items in response");
         return [];
       }
-      itemsList = response["ns1:itemsList"][0]["ns1:item"];
+      itemsList = this.jsonResponse["ns1:itemsList"][0]["ns1:item"];
 
       if (numOfItems <= itemsList.length) {
         for (let i=0; i < numOfItems; ++i) {
@@ -64,9 +95,21 @@ class AllegroScrapper {
     return itemsNames;
   }
 
-  getPhotoUrlOfItemFromResponse(response, itemIndex) {
+  getLowestPrice() {
     try {
-      let url = response["ns1:itemsList"][0]["ns1:item"][itemIndex]["ns1:photosInfo"][0]["ns1:item"][2]["ns1:photoUrl"][0];
+      let firstItemPriceInfo = this.jsonResponse["ns1:itemsList"][0]["ns1:item"][0]['ns1:priceInfo'][0];
+      let priceBuyNow = parseFloat(firstItemPriceInfo['ns1:item'][0]['ns1:priceValue'][0]);
+      //console.log(firstItem);
+      return priceBuyNow
+    } catch (e) {
+      console.log("Error while getting item price response: " + e)
+      return null;
+    }
+  }
+
+  getPhotoUrlOfItem(itemIndex) {
+    try {
+      let url = this.jsonResponse["ns1:itemsList"][0]["ns1:item"][itemIndex]["ns1:photosInfo"][0]["ns1:item"][2]["ns1:photoUrl"][0];
       console.log("\nURL\n" + JSON.stringify(url));
       return url;
     } catch (e) {
@@ -100,7 +143,7 @@ class AllegroScrapper {
     return filter;
   }
 
-  createSearchRequest(query, filters, sortOptions) {
+  createSearchRequest(filters, sortOptions) {
     return this.soapRequest.createRequest({
       'DoGetItemsListRequest': {
         attributes: {
@@ -118,9 +161,9 @@ class AllegroScrapper {
 
   async sendRequest() {
     const response = await this.soapRequest.sendRequest();
-    console.log("FORMATTED RESPONSE:" + JSON.stringify(response));
+    //console.log("FORMATTED RESPONSE:" + JSON.stringify(response));
     this.jsonResponse = this.parseResponse(response);
-    console.log("\nPARSED RESPONSE:\n" + JSON.stringify(this.jsonResponse));
+    //console.log("\nPARSED RESPONSE:\n" + JSON.stringify(this.jsonResponse));
   }
 
   parseResponse (response) {

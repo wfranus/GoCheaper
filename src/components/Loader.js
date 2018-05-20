@@ -6,13 +6,17 @@ import {
   Text,
   ActivityIndicator
 } from 'react-native';
-let Spinner = require('react-native-spinkit');
+import { WaveIndicator } from 'react-native-indicators';
 
 class Loader extends Component {
   constructor(props) {
     super(props);
   }
 
+  // <Spinner
+  //   type="ThreeBounce"
+  //   size={80}
+  //   isVisible={this.props.loading} />
   render() {
     return (
       <Modal
@@ -23,10 +27,9 @@ class Loader extends Component {
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
             <Text style={styles.message}>{this.props.message}</Text>
-            <Spinner
-              type="ThreeBounce"
+            <WaveIndicator
               size={80}
-              isVisible={this.props.loading} />
+              animating={this.props.loading} />
           </View>
         </View>
       </Modal>
