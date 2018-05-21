@@ -89,59 +89,65 @@ class BarCodeInfoScreen extends Component {
 
     const priceColor = userPrice > 0.0 ? 'black' : 'red';
     const priceInitialValue = userPrice > 0.0 ? userPrice.toFixed(2) : "";
+    const priceButtonTitle = userPrice > 0.0 ? 'Edytuj swoją cenę' : 'Wpisz swoją cenę';
 
     return (
       <View style={styles.container}>
         <Loader
           loading={this.state.loading}
           message="Rozpoznawanie produktu"/>
-        {!this.state.loading && <View style={styles.container}>
-          <View style={styles.productInfoView}>
-          <Text style={styles.label}>Kod kreskowy:</Text>
-            <Text style={styles.productInfo}>{barCode}</Text>
-            <Text style={styles.label}>Nazwa produktu:</Text>
-            <Text style={styles.productInfo}>{productName}</Text>
-            <Button
-              containerViewStyle={styles.buttonContainer}
-              buttonStyle={styles.buttonEdit}
-              titleStyle={styles.buttonText}
-              onPress={() => this.setState({showNameModal: true})}
-              icon={{name: 'edit', size:15, color:'black'}}
-              title='Popraw' />
-            <Text style={styles.label}>Twoja cena:</Text>
-            <Text style={[styles.productInfo, {color:priceColor}]}>
-              {userPrice.toFixed(2)} zł
-            </Text>
-            <Button
-              buttonStyle={styles.buttonEdit}
-              titleStyle={styles.buttonText}
-              onPress={() => this.setState({showPriceModal: true})}
-              icon={{name: 'md-pricetag', type:'ionicon', size:20,
-                color:'black', paddingLeft: 5}}
-              title='Wpisz swoją cenę' />
+        {!this.state.loading &&
+          <View style={styles.container}>
+            <View style={styles.productInfoView}>
+              <Text style={styles.label}>Kod kreskowy:</Text>
+              <Text style={styles.productInfo}>{barCode}</Text>
+              <Text style={styles.label}>Nazwa produktu:</Text>
+              <Text style={styles.productInfo}>{productName}</Text>
+              <Button
+                buttonStyle={styles.buttonEdit}
+                titleStyle={styles.buttonText}
+                onPress={() => this.setState({showNameModal: true})}
+                icon={{name: 'edit', size:15, color:'black'}}
+                title='Edytuj nazwę' />
+              <Text style={styles.label}>Twoja cena:</Text>
+              <Text style={[styles.productInfo, {color:priceColor}]}>
+                {userPrice.toFixed(2)} zł
+              </Text>
+              <Button
+                buttonStyle={styles.buttonEdit}
+                titleStyle={styles.buttonText}
+                onPress={() => this.setState({showPriceModal: true})}
+                icon={{name: 'md-pricetag', type:'ionicon', size:20,
+                  color:'black', paddingLeft: 5}}
+                title={priceButtonTitle} />
+            </View>
+            <View style={styles.buttonsView}>
+              <Button
+                buttonStyle={styles.buttonSearch}
+                textStyle={styles.buttonText}
+                disabled={!this.state.isReadyToSearch}
+                onPress={() => this.onSearchButtonPress()}
+                icon={{name: 'whatshot', size:25, color: 'white'}}
+                title='Sprawdź ile zaoszczędzisz' />
+            </View>
           </View>
-          <View style={styles.buttonsView}>
-            <Button
-              buttonStyle={styles.buttonSearch}
-              textStyle={styles.buttonText}
-              disabled={!this.state.isReadyToSearch}
-              onPress={() => this.onSearchButtonPress()}
-              icon={{name: 'whatshot', size:25, color: 'white'}}
-              title='Sprawdź ile zaoszczędzisz' />
+        }
+        {!this.state.loading &&
+          <View>
+            <ProductNameInputModal
+               isVisible={this.state.showNameModal}
+               hideAction={() => this.setState({showNameModal:false})}
+               onSubmit={(name) => this.onProductNameSubmit(name)}
+               initialValue={productName}
+             />
+            <PriceInputModal
+              isVisible={this.state.showPriceModal}
+              hideAction={() => this.setState({showPriceModal:false})}
+              onSubmit={(price) => this.onPriceSubmit(price)}
+              initialValue={priceInitialValue}
+            />
           </View>
-        </View>}
-          <ProductNameInputModal
-             isVisible={this.state.showNameModal}
-             hideAction={() => this.setState({showNameModal:false})}
-             onSubmit={(name) => this.onProductNameSubmit(name)}
-             initialValue={productName}
-           />
-          <PriceInputModal
-            isVisible={this.state.showPriceModal}
-            hideAction={() => this.setState({showPriceModal:false})}
-            onSubmit={(price) => this.onPriceSubmit(price)}
-            initialValue={priceInitialValue}
-          />
+        }
       </View>
     );
   }
@@ -199,13 +205,11 @@ const styles = StyleSheet.create({
     //marginBottom: 10,
     color: 'black'
   },
-  buttonContainer: {
-    borderRadius: 25
-  },
   buttonEdit: {
+    width: 200,
     backgroundColor: 'white',
     borderRadius: 5,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: 'black',
     paddingLeft: 5,
     paddingRight: 5

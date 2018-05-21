@@ -17,6 +17,12 @@ class InputModal extends Component {
     }
   }
 
+  onFocus() {
+    this.setState({
+      isCorrect: this.props.isCorrect(this.state.val)
+    });
+  }
+
   onTextChanged(text) {
     let newText = this.props.validate(text);
 
@@ -40,7 +46,7 @@ class InputModal extends Component {
     } = this.props;
 
     const buttonIconColor = this.state.isCorrect
-      ? colors.green : colors.ligthGrey;
+      ? 'black' : colors.ligthGrey;
 
     return (
       <Modal
@@ -60,6 +66,7 @@ class InputModal extends Component {
             autoFocus={true}
             inputStyle={inputStyle}
             keyboardType={keyboardType}
+            onFocus={() => this.onFocus()}
             onChangeText={(text) => this.onTextChanged(text)}
             value={this.state.val}
           />
@@ -99,7 +106,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     borderWidth: 2,
-    borderColor: colors.green
+    borderColor: 'black'
   },
   buttonDisabled: {
     backgroundColor: 'white',
@@ -113,7 +120,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     fontFamily: 'Helvetica',
-    color: colors.green
+    color: 'black'
   },
   buttonTextDisabled: {
     color: colors.ligthGrey

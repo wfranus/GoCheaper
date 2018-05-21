@@ -48,9 +48,6 @@ class ScannerScreenView extends Component {
     this.props.resetProduct();
   }
 
-  // <View style={{flex:1, justifyContent: 'center', backgroundColor: 'white'}}>
-  //   <Text>{this.props.barCode}</Text>
-  // </View>
   render() {
     return (
       <View style={styles.container}>

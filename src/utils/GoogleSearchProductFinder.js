@@ -125,7 +125,7 @@ class GoogleSearchProductFinder {
     let howMany = Math.min(4, resultsList.length);
     let cmnStrList = [];
 
-    console.log("searching within ", howMany)
+    //console.log("searching within ", howMany)
     for (let i=0; i < howMany; ++i) {
       for (let j=i+1; j < howMany; ++j) {
         let resPair = [resultsList[i], resultsList[j]];
@@ -133,7 +133,7 @@ class GoogleSearchProductFinder {
       }
     }
 
-    console.log("Lonest common strings: ", cmnStrList.toString());
+    //console.log("Lonest common strings: ", cmnStrList.toString());
     let productName = cmnStrList.reduce((p, c) => p.length > c.length ? p : c);
 
     // filtering
@@ -145,7 +145,7 @@ class GoogleSearchProductFinder {
       productName = productName.substring(1)
     }
     productName = productName.trim();
-    console.log("longest: ", productName);
+    //console.log("longest: ", productName);
 
     let minLen = 3;
     if (productName.length < minLen) {

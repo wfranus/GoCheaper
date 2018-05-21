@@ -72,28 +72,34 @@ class SavingsCard extends Component {
             {this.props.shopName}
           </Text>
           <Text style={styles.message}>Taniej o:</Text>
-          <Animated.View
-            style={[
-              styles.circleView,
-              {backgroundColor: color},
-              {transform: circleViewTransform},
-            ]}
-          >
-            <AnimateNumber
-              style={styles.percent}
-              value={this.state.savePercent}
-              timing='easeOut'
-              interval={1}
-              formatter={(val) => {
-                return '' + parseInt(val) + ' %'
-              }}
-            />
-          </Animated.View>
-          {this.state.animationCompleted &&
-            <View style={{alignItems: 'center'}}>
-              <Text style={styles.details}>Najniższa cena: {minPrice} zł</Text>
-              <Text style={styles.details}>Oszczędzisz: {saveAmount} zł</Text>
-            </View>}
+          <View style={styles.circleViewWrapper}>
+            <Animated.View
+              style={[
+                styles.circleViewWrapper,
+                styles.circleView,
+                {backgroundColor: color},
+                {transform: circleViewTransform},
+              ]}
+            >
+              <AnimateNumber
+                style={styles.percent}
+                value={this.state.savePercent}
+                timing='easeOut'
+                interval={1}
+                formatter={(val) => {
+                  return '' + parseInt(val) + ' %'
+                }}
+              />
+            </Animated.View>
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.details}>Najniższa cena:
+              <Text style={{fontWeight: 'bold'}}> {minPrice} zł</Text>
+            </Text>
+            <Text style={styles.details}>Oszczędzisz:
+              <Text style={{fontWeight: 'bold'}}> {saveAmount} zł</Text>
+            </Text>
+          </View>
           <Button
             containerViewStyle={styles.buttonContainer}
             buttonStyle={[
@@ -149,17 +155,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black'
   },
-  circleView: {
+  circleViewWrapper: {
     alignSelf: 'center',
-    margin: 15,
-    width: 100,
-    height: 100,
     justifyContent: 'space-around',
     alignItems: 'center',
-    //borderWidth: 2,
-    //borderColor: 'red',
-    borderRadius: 100/2,
-    //backgroundColor: '#00BCD4'
+    margin: 15,
+    width: 110,
+    height: 110,
+  },
+  circleView: {
+    borderRadius: 110/2,
   },
   percent: {
     textAlign: 'center',

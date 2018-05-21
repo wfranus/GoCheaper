@@ -35,7 +35,7 @@ class NoBetterPriceCard extends Component {
       this.state.scale,
       {
         toValue: 1,
-        duration: 1500,
+        duration: 500,
         easing: Easing.linear
       }
     ).start(() => {
@@ -78,8 +78,8 @@ class NoBetterPriceCard extends Component {
       <Card title="Sprawdziliśmy ceny on-line...">
         <Confetti
           ref={(node) => this._confettiView = node}
-          size={15}
-          bsize={4}
+          size={30}
+          bsize={10}
           duration={4000}
           timeout={5}
         />
