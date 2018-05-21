@@ -35,7 +35,7 @@ class NoBetterPriceCard extends Component {
       this.state.scale,
       {
         toValue: 1,
-        duration: 1000,
+        duration: 1500,
         easing: Easing.linear
       }
     ).start(() => {
@@ -65,11 +65,14 @@ class NoBetterPriceCard extends Component {
     ];
     const {
       color,
+      buttonDisabled,
       buttonTitle,
       minPrice,
       onButtonPress,
       shopName
     } = this.props;
+
+    const minPriceMsg = minPrice ? minPrice.toFixed(2) + ' zł' : 'brak';
 
     return (
       <Card title="Sprawdziliśmy ceny on-line...">
@@ -81,24 +84,30 @@ class NoBetterPriceCard extends Component {
           timeout={5}
         />
         <Text>i nie znaleźliśmy niższej ceny dla tego produktu.</Text>
-        <View style={styles.circleView}>
+        <Animated.View
+          style={[
+            styles.circleView,
+            {transform: circleViewTransform},
+          ]}
+        >
           <Icon
             name='thumbsup'
             type='octicon'
             size={90}
             color={colors.green}
             onPress={() => this.throwConfetti()}/>
-        </View>
+        </Animated.View>
         <Text style={styles.details}>
           Najniższa cena w <Text style={{color:color}}>{shopName}</Text>
-          :  {minPrice} zł<
-        /Text>
+          :  {minPriceMsg}
+        </Text>
         <Button
           containerViewStyle={styles.buttonContainer}
           buttonStyle={[
             styles.button,
             { backgroundColor: color },
           ]}
+          disabled={buttonDisabled}
           textStyle={styles.buttonText}
           onPress={onButtonPress}
           icon={{name: 'shopping-basket', size:25, color: 'white'}}

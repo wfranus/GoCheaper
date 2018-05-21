@@ -3,6 +3,7 @@ import SoapRequest from 'react-native-soap-request'
 
 // const BASE_URL = 'https://webapi.allegro.pl.webapisandbox.pl/service.php?wsdl'
 const API_BASE_URL = 'https://webapi.allegro.pl/service.php'
+const WEBSITE_URL = 'https://allegro.pl'
 
 class AllegroScrapper {
   constructor(props) {
@@ -57,10 +58,26 @@ class AllegroScrapper {
     let request = this.createSearchRequest(filters, sortOptions);
     await this.sendRequest();
 
+    let itemsCount = this.getItemsCount();
+    let minPrice = itemsCount ? this.getLowestPrice() : null;
+
     callback({
-      "minPrice": this.getLowestPrice() || 0.0,
-      "resultsNum": this.getItemsCount() || 0
+      "minPrice": minPrice,
+      "resultsNum": itemsCount
     });
+  }
+
+  createItemsListSearchUrl(productName) {
+    console.log("creating Allegro url...");
+    let queryString = objToQueryString({
+        string: productName,
+        order: "p",
+        stan: "nowe",
+        fferTypeBuyNow: 1
+    });
+
+    let searchUrl = WEBSITE_URL + `/listing?${queryString}`
+    return searchUrl;
   }
 
   getItemsCount() {
@@ -76,7 +93,7 @@ class AllegroScrapper {
     let itemsNames = [];
 
     try {
-      if (numOfItems > getItemsCountFromResponse()) {
+      if (numOfItems > getItemsCount()) {
         console.log("Not enough items in response");
         return [];
       }
@@ -181,6 +198,15 @@ class AllegroScrapper {
 
     return parsedResponse;
   }
+}
+
+//TODO: move this to helpers.js
+function objToQueryString(obj) {
+  const keyValues = [];
+  for (const key in obj) {
+    keyValues.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+  }
+  return keyValues.join('&');
 }
 
 export default AllegroScrapper

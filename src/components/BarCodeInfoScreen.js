@@ -47,7 +47,7 @@ class BarCodeInfoScreen extends Component {
   componentDidMount() {
     this.setState({
       loading: true,
-      isReadyToSearch: true
+      isReadyToSearch: false
     });
 
     this.ProductFinder.find(this.props.barCode, (productInfo) => {
@@ -63,10 +63,10 @@ class BarCodeInfoScreen extends Component {
 
   onPriceSubmit(price) {
       this.setState({
-        showPriceModal: false
+        showPriceModal: false,
+        isReadyToSearch: true,
       });
       this.props.setProductPrice(price);
-      //this.props.navigation.navigate('SavingsSummary');
   }
 
   onProductNameSubmit(name) {
@@ -74,7 +74,6 @@ class BarCodeInfoScreen extends Component {
         showNameModal: false
       });
       this.props.setProductName(name);
-      //this.props.navigation.navigate('SavingsSummary');
   }
 
   onSearchButtonPress() {

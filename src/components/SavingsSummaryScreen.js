@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Linking
 } from 'react-native';
 import { Icon, Button, Badge, Card } from 'react-native-elements';
 import Modal from "react-native-modal";
@@ -34,13 +35,17 @@ class SavingsSummaryScreen extends Component {
     this.state = {
       loading: true,
       onlineCheaper: true,
+      anyResultsFound: false,
       allegroSavePercent: 0,
       allegroMinPrice: 0.0,
       allegroSaveAmount: 0.0,
+      allegroItemsListingUrl: null
     }
 
     this.AllegroScrapper = new AllegroScrapper();
     this.AllegroScrapper.getMinPriceForItem.bind(this);
+    this.AllegroScrapper.createItemsListSearchUrl.bind(this);
+    //this.onShowAuctionsButtonPress = this.onShowAuctionsButtonPress.bind(this);
   }
 
   componentDidMount() {
@@ -52,22 +57,43 @@ class SavingsSummaryScreen extends Component {
         if (!results) { return; }
 
         const {minPrice, resultsNum} = results;
-        const {userPrice} = this.props;
+        const {userPrice, productName} = this.props;
 
-        let onlineCheaper = minPrice <= userPrice;
-        let allegroSaveAmount = onlineCheaper ? parseFloat(userPrice - minPrice).toFixed(2) : 0.0;
-        let allegroSavePercent = onlineCheaper ? Math.round(allegroSaveAmount*100/userPrice) : 0;
+        if (!minPrice || !resultsNum) {
+          console.log("No results for this product!");
 
-        this.props.setProductMinPrice(results.minPrice);
-        this.setState({
-          onlineCheaper: onlineCheaper,
-          allegroSavePercent: allegroSavePercent,
-          allegroMinPrice: minPrice,
-          allegroSaveAmount: allegroSaveAmount,
-          allegroItems: resultsNum,
-          loading: false,
-        });
+          return this.setState({
+            onlineCheaper: false,
+            anyResultsFound: false,
+            allegroMinPrice: null,
+            loading: false,
+          });
+        } else {
+          let allegroUrl = this.AllegroScrapper.createItemsListSearchUrl(productName);
+          let onlineCheaper = minPrice <= userPrice;
+          let allegroSaveAmount = onlineCheaper
+            ? parseFloat(userPrice - minPrice).toFixed(2) : 0.0;
+          let allegroSavePercent = onlineCheaper
+            ? Math.round(allegroSaveAmount*100/userPrice) : 0;
+
+          this.props.setProductMinPrice(minPrice);
+          this.setState({
+            onlineCheaper: onlineCheaper,
+            anyResultsFound: true,
+            allegroSavePercent: allegroSavePercent,
+            allegroMinPrice: minPrice,
+            allegroSaveAmount: allegroSaveAmount,
+            allegroItemsListingUrl: allegroUrl,
+            loading: false,
+          });
+        }
     });
+  }
+
+  onShowAuctionsButtonPress() {
+    console.log("Opening URL: " + this.state.allegroItemsListingUrl);
+    Linking.openURL(this.state.allegroItemsListingUrl).catch(err =>
+      console.error('An error occurred', err));
   }
 
   render() {
@@ -77,12 +103,17 @@ class SavingsSummaryScreen extends Component {
       userPrice,
     } = this.props;
 
+    const showAuctionsButtonTitle = this.state.anyResultsFound
+      ? 'Pokaż aukcje' : 'Brak aukcji';
+
+
     return (
       <View style={styles.container}>
         <Loader
           loading={this.state.loading}
           message="Sprawdzanie cen on-line"/>
-        {!this.state.loading && <View style={styles.container}>
+        {!this.state.loading
+          && <View style={styles.container}>
           <View style={styles.productInfoView}>
             <Text style={styles.barCode}>{barCode}</Text>
             <Text style={styles.productName}>{productName}</Text>
@@ -99,8 +130,9 @@ class SavingsSummaryScreen extends Component {
                 saveAmount={this.state.allegroSaveAmount}
                 savePercent={this.state.allegroSavePercent}
                 color={colors.allegro}
-                buttonTitle='Pokaż aukcje'
-                onButtonPress={()=>{console.log("Allegro")}}/>
+                buttonDisabled={!this.state.anyResultsFound}
+                buttonTitle={showAuctionsButtonTitle}
+                onButtonPress={() => this.onShowAuctionsButtonPress()}/>
             }
             {!this.state.onlineCheaper &&
               <NoBetterPriceCard
@@ -108,8 +140,9 @@ class SavingsSummaryScreen extends Component {
                 shopName='Allegro.pl'
                 minPrice={this.state.allegroMinPrice}
                 color={colors.allegro}
-                buttonTitle='Pokaż aukcje'
-                onButtonPress={()=>{console.log("Allegro")}}/>
+                buttonDisabled={!this.state.anyResultsFound}
+                buttonTitle={showAuctionsButtonTitle}
+                onButtonPress={() => this.onShowAuctionsButtonPress()}/>
             }
           </View>
         </View>}

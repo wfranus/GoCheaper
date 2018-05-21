@@ -54,6 +54,7 @@ class SavingsCard extends Component {
     const {
       color,
       buttonTitle,
+      buttonDisabled,
       minPrice,
       onButtonPress,
       saveAmount
@@ -99,6 +100,7 @@ class SavingsCard extends Component {
               styles.button,
               { backgroundColor: color },
             ]}
+            disabled={buttonDisabled}
             textStyle={styles.buttonText}
             onPress={onButtonPress}
             icon={{name: 'shopping-basket', size:25, color: 'white'}}
