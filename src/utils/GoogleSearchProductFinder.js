@@ -137,15 +137,22 @@ class GoogleSearchProductFinder {
     let productName = cmnStrList.reduce((p, c) => p.length > c.length ? p : c);
 
     // filtering
-    //TODO: usunac myslniki, sprawdzic dlugosc nazwy czy nie za krotka
+    productName = productName.trim();
+    if (productName.endsWith('-')) {
+      productName = productName.substring(0, productName.length - 1)
+    }
+    if (productName.startsWith('-')) {
+      productName = productName.substring(1)
+    }
     productName = productName.trim();
     console.log("longest: ", productName);
 
     let minLen = 3;
     if (productName.length < minLen) {
+      console.log("too short");
       return "";
     }
-    
+
     return productName;
   }
 

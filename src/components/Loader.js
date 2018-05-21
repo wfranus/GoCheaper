@@ -4,9 +4,9 @@ import {
   View,
   Modal,
   Text,
-  ActivityIndicator
 } from 'react-native';
 import { DotIndicator } from 'react-native-indicators';
+import colors from './config/colors';
 
 class Loader extends Component {
   constructor(props) {
@@ -40,10 +40,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    backgroundColor: 'rgb(59, 59, 59)'//'#00000040'
+    backgroundColor: 'rgb(59, 59, 59)'
   },
   activityIndicatorWrapper: {
-    backgroundColor: 'rgb(211, 216, 254)',//'#FFFFFF',
+    backgroundColor: 'white',
     height: 200,
     width: 200,
     padding: 20,
@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
   },
   message: {
     color: 'black',
-    //fontFamily: 'monospace',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',

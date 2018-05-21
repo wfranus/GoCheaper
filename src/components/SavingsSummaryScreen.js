@@ -134,10 +134,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(SavingsSummaryScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    //margin:10,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',
-    backgroundColor: 'white'//'#ffc06c'
+    backgroundColor: 'white'
   },
   productInfoView: {
     flex: 1,
