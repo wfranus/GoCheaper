@@ -1,10 +1,10 @@
-import { TabNavigator, StackNavigator, HeaderBackButton } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 
 import ScannerScreen from '../components/ScannerScreen';
 import BarCodeInfoScreen from '../components/BarCodeInfoScreen';
 import SavingsSummaryScreen from '../components/SavingsSummaryScreen';
 
-const NavigationStack = StackNavigator(
+const NavigationStack = createStackNavigator(
   {
     Scanner: { screen: ScannerScreen },
     BarCodeInfo: { screen: BarCodeInfoScreen },
