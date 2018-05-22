@@ -73,7 +73,8 @@ class AllegroScrapper {
         string: productName,
         order: "p",
         stan: "nowe",
-        fferTypeBuyNow: 1
+        offerTypeBuyNow: 1,
+        description: 1
     });
 
     let searchUrl = WEBSITE_URL + `/listing?${queryString}`
@@ -112,11 +113,21 @@ class AllegroScrapper {
     return itemsNames;
   }
 
+  //TODO: skip promoted items and get price of first not promoted item
   getLowestPrice() {
     try {
-      let firstItemPriceInfo = this.jsonResponse["ns1:itemsList"][0]["ns1:item"][0]['ns1:priceInfo'][0];
+      let itemsList = this.jsonResponse["ns1:itemsList"][0]["ns1:item"];
+      //console.log(itemsList);
+
+      const notPromoted = (item) => { return item["ns1:promotionInfo"][0] === "0"}
+      let firstNotPromotedItem = itemsList.find(notPromoted);
+
+      if (typeof firstNotPromotedItem === 'undefined') { return null; }
+      //console.log(firstNotPromotedItem);
+
+      let firstItemPriceInfo = firstNotPromotedItem['ns1:priceInfo'][0];
       let priceBuyNow = parseFloat(firstItemPriceInfo['ns1:item'][0]['ns1:priceValue'][0]);
-      //console.log(firstItem);
+
       return priceBuyNow
     } catch (e) {
       console.log("Error while getting item price response: " + e)
