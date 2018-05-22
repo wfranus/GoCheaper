@@ -18,22 +18,14 @@ import {setProductProp, resetProduct} from "../actions/productActions"
 import {turnOnCamera, turnOffCamera} from "../actions/cameraActions"
 
 
-class ScannerScreenView extends Component {
+class ScannerScreen extends Component {
 
-  // /* NAVIGATION */
-  // static navigationOptions = ({ navigation, screenProps }) => ({
-  //   headerTitleStyle: {
-  //     flex:1,
-  //     fontSize: 30,
-  //     fontWeight: '200',
-  //     fontFamily: 'AutobusBold',
-  //     textAlign: 'center',
-  //     marginRight: 40
-  //   },
-  //   headerRight: <Icon name={'settings'}
-  //                      iconStyle={{marginRight: 10}}
-  //                      onPress={ () => { navigation.navigate('Settings') }} />,
-  // });
+  /* NAVIGATION */
+  static navigationOptions = ({ navigation, screenProps }) => ({
+    headerLeft: <Icon name={'arrow-back'}
+                       iconStyle={{marginRight: 10}}
+                       color='transparent' />,
+  });
 
   constructor(props) {
     super(props);
@@ -101,8 +93,6 @@ const mapDispatchToProps = dispatch => ({
   setBarCode: (newBarCode) => { dispatch(setProductProp("barCode", newBarCode))},
 });
 
-const ScannerScreen = connect(mapStateToProps, mapDispatchToProps)(ScannerScreenView);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -116,4 +106,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ScannerScreen;
+export default connect(mapStateToProps, mapDispatchToProps)(ScannerScreen);

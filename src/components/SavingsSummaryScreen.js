@@ -18,17 +18,6 @@ import {setProductProp} from "../actions/productActions";
 
 class SavingsSummaryScreen extends Component {
 
-  /* NAVIGATION */
-  static navigationOptions = ({ navigation, screenProps }) => ({
-      headerLeft: <Icon name={'arrow-back'}
-                        iconStyle={{marginLeft: 10}}
-                        onPress={ () => {
-                          navigation.goBack(null)}} />,
-      headerRight: <Icon name={'settings'}
-                         iconStyle={{marginRight: 10}}
-                         onPress={ () => { navigation.navigate('Settings') }} />,
-  });
-
   constructor(props) {
     super(props);
 

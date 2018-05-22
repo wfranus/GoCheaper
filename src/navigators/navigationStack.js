@@ -1,17 +1,23 @@
+import React from 'react'
 import { createStackNavigator } from 'react-navigation';
+import { Icon } from 'react-native-elements';
 
 import ScannerScreen from '../components/ScannerScreen';
 import BarCodeInfoScreen from '../components/BarCodeInfoScreen';
 import SavingsSummaryScreen from '../components/SavingsSummaryScreen';
+import SettingsScreen from '../components/SettingsScreen';
+import SettingsSelectScreen from '../components/SettingsSelectScreen';
 
 const NavigationStack = createStackNavigator(
   {
     Scanner: { screen: ScannerScreen },
     BarCodeInfo: { screen: BarCodeInfoScreen },
     SavingsSummary: { screen: SavingsSummaryScreen },
+    Settings: { screen: SettingsScreen },
+    SettingsSelect: { screen: SettingsSelectScreen},
   },
   {
-    navigationOptions: {
+    navigationOptions: ({ navigate, navigation }) => ({
       title: "GoCheaper",
       headerStyle: {
         backgroundColor: 'white'
@@ -28,11 +34,19 @@ const NavigationStack = createStackNavigator(
         fontWeight: "normal",
         fontFamily: "AutobusBold"
       },
-      headerLeft: ({goBack}) => <Icon name={'arrow-back'}
-                        iconStyle={{marginLeft: 10}}
-                        onPress={ () => {navigation.goBack(null);}}
-                  />,
-    },
+      headerLeft: (
+        <Icon name={'arrow-back'}
+              iconStyle={{marginLeft: 10}}
+              onPress={ () => {navigation.goBack(null);}}
+        />
+      ),
+      headerRight: (
+        <Icon name={'settings'}
+              iconStyle={{marginRight: 10}}
+              onPress={ () => { navigation.navigate('Settings') }}
+        />
+      ),
+    }),
   }
 );
 

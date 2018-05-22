@@ -23,9 +23,6 @@ class BarCodeInfoScreen extends Component {
                       onPress={ () => {
                         navigation.goBack(null);
                         navigation.state.params.onGoBack() }} />,
-    headerRight: <Icon name={'settings'}
-                       iconStyle={{marginRight: 10}}
-                       onPress={ () => { navigation.navigate('Settings') }} />,
   });
 
   constructor(props) {
