@@ -1,12 +1,6 @@
 import AppNavigator from "../navigators/navigationStack";
+import { createNavigationReducer } from 'react-navigation-redux-helpers';
 
-const initialState = AppNavigator.router.getStateForAction(
-  AppNavigator.router.getActionForPathAndParams("Scanner")
-);
-
-const navigationReducer = (state = initialState, action) => {
-  const newState = AppNavigator.router.getStateForAction(action, state);
-  return newState || state;
-};
+const navigationReducer = createNavigationReducer(AppNavigator);
 
 export default navigationReducer;

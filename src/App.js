@@ -1,14 +1,30 @@
 import React, { Component } from 'react';
-import AppNavigation from './navigators/index';
-import { Provider } from 'react-redux'
-import store from './store'
+import { Text } from 'react-native';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react'
 
+import AppNavigation from './navigators/index';
+import configureStore from './store';
+
+const { persistor, store } = configureStore()
 
 class App extends Component {
+  state = {
+    loading: true
+  };
+
   render() {
     return(
       <Provider store={store}>
-        <AppNavigation />
+        <PersistGate
+          loading={
+            <Text>
+              Booting...
+            </Text>
+          }
+          persistor={persistor}>
+          <AppNavigation />
+        </PersistGate>
       </Provider>
     )
   }
