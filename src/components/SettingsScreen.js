@@ -38,9 +38,11 @@ class SettingsScreen extends Component {
           getValue: () => this.props.allegroFilterOptions.offerType,
           type: "select",
           availableOptions: [
-            "kup teraz",
-            "aukcja",
-            "bez znaczenia",
+            // "kup teraz",
+            // "aukcja",
+            // "bez znaczenia",
+            "buyNow",
+            "auction"
           ],
         },
         {
@@ -55,9 +57,11 @@ class SettingsScreen extends Component {
           getValue: () => this.props.allegroFilterOptions.condition,
           type: "select",
           availableOptions: [
-            "nowy",
-            "używany",
-            "bez znaczenia",
+            // "nowy",
+            // "używany",
+            // "bez znaczenia",
+            "new",
+            "used"
           ],
         },
         {
@@ -95,13 +99,20 @@ class SettingsScreen extends Component {
           getValue: () => this.props.allegroSortOptions.sortType,
           type: "select",
           availableOptions: [
-            "cenie",
-            "cenie z dostawą",
-            "czasie do zakończenia",
-            "czasie wystawienia",
-            "popularności",
-            "nazwie",
-            "trafności"
+            // "cenie",
+            // "cenie z dostawą",
+            // "czasie do zakończenia",
+            // "czasie wystawienia",
+            // "popularności",
+            // "nazwie",
+            // "trafności"
+            "price",
+            "priceDelivery",
+            "endingTime",
+            "startingTime",
+            "popularity",
+            "name",
+            "relevance"
           ],
         },
         {
@@ -110,8 +121,10 @@ class SettingsScreen extends Component {
           getValue: () => this.props.allegroSortOptions.sortOrder,
           type: "select",
           availableOptions: [
-            "rosnąco",
-            "malejąco",
+            // "rosnąco",
+            // "malejąco",
+            "asc",
+            "desc"
           ],
         }
       ],
