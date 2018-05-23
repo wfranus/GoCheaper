@@ -1,20 +1,21 @@
 import {AllegroAPI_key} from './API_KEYS'
 import SoapRequest from 'react-native-soap-request'
 
-// const BASE_URL = 'https://webapi.allegro.pl.webapisandbox.pl/service.php?wsdl'
 const API_BASE_URL = 'https://webapi.allegro.pl/service.php'
 const WEBSITE_URL = 'https://allegro.pl'
 
 class AllegroScrapper {
-  constructor(props) {
+  constructor(settings) {
     this.API_key = AllegroAPI_key;
     this.soapRequest = new SoapRequest({
       requestURL: API_BASE_URL,
       elemNameForArrayItem: "item"
     });
     this.jsonResponse = null;
+    this.settings = settings;
   }
 
+  // this metod is deprecated for now
   async searchForProduct(productStr, callback) {
     let filters = [
       this.createFilter("search", [productStr]), //TODO: escape special chars?
@@ -42,19 +43,41 @@ class AllegroScrapper {
   }
 
   async getMinPriceForItem(productName, callback) {
+    const filterSettings = this.settings.allegroFilterOptions;
+
     let filters = [
       this.createFilter("search", [productName]), //TODO: escape special chars?
-      this.createFilter("description", ["true"]),
-      this.createFilter("condition", ["new"]),
-      // this.createFilter("price", null, 1.0, 100.0),
-      this.createFilter("offerType", ["buyNow"]), //buyNow/auction
       // this.createFilter("departament", ["fashionBeauty"]),
       // this.createFilter("category", [1]), //category is int
     ];
+
+    if (filterSettings.description) {
+      filters.push(this.createFilter("description", ["true"]));
+    }
+
+    if (filterSettings.condition) {
+      filters.push(this.createFilter("condition", [filterSettings.condition]));
+    }
+
+    if (filterSettings.offerType) {
+      filters.push(this.createFilter("offerType", [filterSettings.offerType]));
+    }
+
+    if (filterSettings.city) {
+      filters.push(this.createFilter("city", [filterSettings.city]));
+    }
+
+    if (filterSettings.minPrice || filterSettings.maxPrice) {
+      filters.push(this.createFilter("price", null, filterSettings.minPrice, filterSettings.maxPrice));
+    }
+
+    let sortSettings = this.settings.allegroSortOptions;
+
     let sortOptions = {
-      "sortType": "price", // endingTime/startingTime/price/priceDelivery/popularity/name/relevance
-      "sortOrder": "asc" // scd/desc
+      "sortType": sortSettings.sortType,
+      "sortOrder": sortSettings.sortOrder
     };
+
     let request = this.createSearchRequest(filters, sortOptions);
     await this.sendRequest();
 
@@ -117,18 +140,33 @@ class AllegroScrapper {
   getLowestPrice() {
     try {
       let itemsList = this.jsonResponse["ns1:itemsList"][0]["ns1:item"];
-      //console.log(itemsList);
+      let firstItem = itemsList[0];
 
-      const notPromoted = (item) => { return item["ns1:promotionInfo"][0] === "0"}
-      let firstNotPromotedItem = itemsList.find(notPromoted);
+      if (this.settings.allegroFilterOptions.skipPromoted) {
+        const notPromoted = (item) => { return item["ns1:promotionInfo"][0] === "0"}
+        let firstNotPromotedItem = itemsList.find(notPromoted);
 
-      if (typeof firstNotPromotedItem === 'undefined') { return null; }
-      //console.log(firstNotPromotedItem);
+        if (typeof firstNotPromotedItem === 'undefined') { return null; }
+        firstItem = firstNotPromotedItem;
+      }
 
-      let firstItemPriceInfo = firstNotPromotedItem['ns1:priceInfo'][0];
-      let priceBuyNow = parseFloat(firstItemPriceInfo['ns1:item'][0]['ns1:priceValue'][0]);
+      let firstItemPriceInfoList = firstItem['ns1:priceInfo'][0]['ns1:item'];
+      console.log(JSON.stringify(firstItemPriceInfoList));
 
-      return priceBuyNow
+      let lowestPriceStr = "";
+
+      // TODO: there should be additional setting for this switch
+      if (this.settings.allegroSortOptions.sortType == 'priceDelivery') {
+        const priceDelivery = (item) => { return item["ns1:priceType"][0] === 'withDelivery'}
+        let priceItem = firstItemPriceInfoList.find(priceDelivery);
+        lowestPriceStr = priceItem['ns1:priceValue'][0];
+      } else {
+        const priceBuyNow = (item) => { return item["ns1:priceType"][0] === 'buyNow'}
+        let priceItem = firstItemPriceInfoList.find(priceBuyNow);
+        lowestPriceStr = priceItem['ns1:priceValue'][0];
+      }
+
+      return parseFloat(lowestPriceStr);
     } catch (e) {
       console.log("Error while getting item price response: " + e)
       return null;
@@ -189,9 +227,7 @@ class AllegroScrapper {
 
   async sendRequest() {
     const response = await this.soapRequest.sendRequest();
-    //console.log("FORMATTED RESPONSE:" + JSON.stringify(response));
     this.jsonResponse = this.parseResponse(response);
-    //console.log("\nPARSED RESPONSE:\n" + JSON.stringify(this.jsonResponse));
   }
 
   parseResponse (response) {

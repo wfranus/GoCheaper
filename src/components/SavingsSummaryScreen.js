@@ -31,7 +31,7 @@ class SavingsSummaryScreen extends Component {
       allegroItemsListingUrl: null
     }
 
-    this.AllegroScrapper = new AllegroScrapper();
+    this.AllegroScrapper = new AllegroScrapper(this.props.settings);
     this.AllegroScrapper.getMinPriceForItem.bind(this);
     this.AllegroScrapper.createItemsListSearchUrl.bind(this);
     //this.onShowAuctionsButtonPress = this.onShowAuctionsButtonPress.bind(this);
@@ -145,6 +145,7 @@ const mapStateToProps = state => ({
   productName: state.product.name,
   userPrice: state.product.userPrice,
   minPrice: state.product.minPrice,
+  settings: state.settings,
 });
 
 const mapDispatchToProps = dispatch => ({
