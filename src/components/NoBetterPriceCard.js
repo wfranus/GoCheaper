@@ -8,7 +8,6 @@ import {
   Easing,
 } from 'react-native';
 import { Icon, Button, Card } from 'react-native-elements';
-import Confetti from 'react-native-confetti';
 import colors from './config/colors';
 
 class NoBetterPriceCard extends Component {
@@ -45,19 +44,6 @@ class NoBetterPriceCard extends Component {
     });
   }
 
-  componentWillUnmount () {
-    if (this._confettiView) {
-      this._confettiView.stopConfetti();
-    }
-  }
-
-  throwConfetti() {
-    if (this._confettiView) {
-      console.log("Let's celebrate!");
-      this._confettiView.startConfetti();
-    }
-  }
-
   render() {
     let circleViewTransform = [
       {scaleX: this.state.scale},
@@ -76,13 +62,6 @@ class NoBetterPriceCard extends Component {
 
     return (
       <Card title="Sprawdziliśmy ceny on-line...">
-        <Confetti
-          ref={(node) => this._confettiView = node}
-          size={30}
-          bsize={10}
-          duration={4000}
-          timeout={5}
-        />
         <Text>i nie znaleźliśmy niższej ceny dla tego produktu.</Text>
         <Animated.View
           style={[
@@ -94,8 +73,7 @@ class NoBetterPriceCard extends Component {
             name='thumbsup'
             type='octicon'
             size={90}
-            color={colors.green}
-            onPress={() => this.throwConfetti()}/>
+            color={colors.green}/>
         </Animated.View>
         <Text style={styles.details}>
           Najniższa cena w <Text style={{color:color}}>{shopName}</Text>

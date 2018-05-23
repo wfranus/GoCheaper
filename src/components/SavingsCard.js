@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   container: {
     margin: 15,
     marginBottom: 15,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     borderColor: '#cccaca',
     borderWidth: 1,
     padding: 25,

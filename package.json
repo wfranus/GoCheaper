@@ -15,7 +15,7 @@
     "react-native-animate-number": "^0.1.2",
     "react-native-camera": "^1.1.1",
     "react-native-cheerio": "^1.0.0-rc.4",
-    "react-native-confetti": "0.0.6",
+    "react-native-confetti": "git+https://git@github.com/cdvntr/react-native-confetti",
     "react-native-elements": "^1.0.0-beta5",
     "react-native-html-parser": "0.0.5",
     "react-native-indicators": "^0.13.0",

@@ -7,6 +7,7 @@ import {
   Linking
 } from 'react-native';
 import { Icon, Button, Badge, Card } from 'react-native-elements';
+import Confetti from 'react-native-confetti';
 import Modal from "react-native-modal";
 import { connect } from "react-redux";
 import Loader from './Loader';
@@ -75,8 +76,24 @@ class SavingsSummaryScreen extends Component {
             allegroItemsListingUrl: allegroUrl,
             loading: false,
           });
+
+          if (onlineCheaper) {
+            this.throwConfetti();
+          }
         }
     });
+  }
+
+  componentWillUnmount () {
+    if (this._confettiView) {
+      this._confettiView.stopConfetti();
+    }
+  }
+
+  throwConfetti() {
+    if (this._confettiView) {
+      this._confettiView.startConfetti();
+    }
   }
 
   onShowAuctionsButtonPress() {
@@ -103,6 +120,13 @@ class SavingsSummaryScreen extends Component {
           message="Sprawdzanie cen on-line"/>
         {!this.state.loading
           && <View style={styles.container}>
+          <Confetti
+            ref={(node) => this._confettiView = node}
+            size={2}
+            bsize={2}
+            duration={4000}
+            timeout={5}
+          />
           <View style={styles.productInfoView}>
             <Text style={styles.barCode}>{barCode}</Text>
             <Text style={styles.productName}>{productName}</Text>
@@ -161,7 +185,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   productInfoView: {
     flex: 1,
