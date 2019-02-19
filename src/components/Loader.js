@@ -6,7 +6,6 @@ import {
   Text,
 } from 'react-native';
 import { DotIndicator } from 'react-native-indicators';
-import colors from './config/colors';
 
 class Loader extends Component {
   constructor(props) {

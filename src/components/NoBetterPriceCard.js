@@ -1,13 +1,8 @@
 'use strict';
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Animated,
-  Easing,
-} from 'react-native';
+import { StyleSheet, Text, Animated, Easing, } from 'react-native';
 import { Icon, Button, Card } from 'react-native-elements';
+
 import colors from './config/colors';
 
 class NoBetterPriceCard extends Component {

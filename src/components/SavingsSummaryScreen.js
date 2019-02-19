@@ -1,21 +1,16 @@
 'use strict';
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Linking
-} from 'react-native';
-import { Icon, Button, Badge, Card } from 'react-native-elements';
+import { StyleSheet, Text, View, Linking } from 'react-native';
+import { Badge } from 'react-native-elements';
 import Confetti from 'react-native-confetti';
-import Modal from "react-native-modal";
 import { connect } from "react-redux";
+
 import Loader from './Loader';
 import SavingsCard from './SavingsCard';
-import NoBetterPriceCard from './NoBetterPriceCard'
+import NoBetterPriceCard from './NoBetterPriceCard';
 import colors from './config/colors';
 import AllegroScrapper from '../utils/AllegroScrapper';
-import {setProductProp} from "../actions/productActions";
+import { setProductProp } from "../actions/productActions";
 
 class SavingsSummaryScreen extends Component {
 
@@ -30,7 +25,7 @@ class SavingsSummaryScreen extends Component {
       allegroMinPrice: 0.0,
       allegroSaveAmount: 0.0,
       allegroItemsListingUrl: null
-    }
+    };
 
     this.AllegroScrapper = new AllegroScrapper(this.props.settings);
     this.AllegroScrapper.getMinPriceForItem.bind(this);

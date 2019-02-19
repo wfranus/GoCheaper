@@ -1,8 +1,9 @@
-import {AllegroAPI_key} from './API_KEYS'
-import SoapRequest from 'react-native-soap-request'
+import {AllegroAPI_key} from './API_KEYS';
+import {objToQueryString} from './helpers';
+import SoapRequest from 'react-native-soap-request';
 
-const API_BASE_URL = 'https://webapi.allegro.pl/service.php'
-const WEBSITE_URL = 'https://allegro.pl'
+const API_BASE_URL = 'https://webapi.allegro.pl/service.php';
+const WEBSITE_URL = 'https://allegro.pl';
 
 class AllegroScrapper {
   constructor(settings) {
@@ -47,8 +48,6 @@ class AllegroScrapper {
 
     let filters = [
       this.createFilter("search", [productName]), //TODO: escape special chars?
-      // this.createFilter("departament", ["fashionBeauty"]),
-      // this.createFilter("category", [1]), //category is int
     ];
 
     if (filterSettings.description) {
@@ -100,8 +99,7 @@ class AllegroScrapper {
         description: 1
     });
 
-    let searchUrl = WEBSITE_URL + `/listing?${queryString}`
-    return searchUrl;
+    return WEBSITE_URL + `/listing?${queryString}`;
   }
 
   getItemsCount() {
@@ -143,7 +141,7 @@ class AllegroScrapper {
       let firstItem = itemsList[0];
 
       if (this.settings.allegroFilterOptions.skipPromoted) {
-        const notPromoted = (item) => { return item["ns1:promotionInfo"][0] === "0"}
+        const notPromoted = (item) => { return item["ns1:promotionInfo"][0] === "0"};
         let firstNotPromotedItem = itemsList.find(notPromoted);
 
         if (typeof firstNotPromotedItem === 'undefined') { return null; }
@@ -156,19 +154,19 @@ class AllegroScrapper {
       let lowestPriceStr = "";
 
       // TODO: there should be additional setting for this switch
-      if (this.settings.allegroSortOptions.sortType == 'priceDelivery') {
-        const priceDelivery = (item) => { return item["ns1:priceType"][0] === 'withDelivery'}
+      if (this.settings.allegroSortOptions.sortType === 'priceDelivery') {
+        const priceDelivery = (item) => { return item["ns1:priceType"][0] === 'withDelivery'};
         let priceItem = firstItemPriceInfoList.find(priceDelivery);
         lowestPriceStr = priceItem['ns1:priceValue'][0];
       } else {
-        const priceBuyNow = (item) => { return item["ns1:priceType"][0] === 'buyNow'}
+        const priceBuyNow = (item) => { return item["ns1:priceType"][0] === 'buyNow'};
         let priceItem = firstItemPriceInfoList.find(priceBuyNow);
         lowestPriceStr = priceItem['ns1:priceValue'][0];
       }
 
       return parseFloat(lowestPriceStr);
     } catch (e) {
-      console.log("Error while getting item price response: " + e)
+      console.log("Error while getting item price response: " + e);
       return null;
     }
   }
@@ -179,7 +177,7 @@ class AllegroScrapper {
       console.log("\nURL\n" + JSON.stringify(url));
       return url;
     } catch (e) {
-      console.log("Error while getting photo url from response!")
+      console.log("Error while getting photo url from response!");
       return null;
     }
   }
@@ -239,21 +237,12 @@ class AllegroScrapper {
       let methodResponseName = Object.keys(parsedResponse)[0];
       parsedResponse = parsedResponse[methodResponseName][0];
     } catch (e) {
-      console.log("Response from Allegro API is in wrong format")
+      console.log("Response from Allegro API is in wrong format");
       return null;
     }
 
     return parsedResponse;
   }
-}
-
-//TODO: move this to helpers.js
-function objToQueryString(obj) {
-  const keyValues = [];
-  for (const key in obj) {
-    keyValues.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
-  }
-  return keyValues.join('&');
 }
 
 export default AllegroScrapper

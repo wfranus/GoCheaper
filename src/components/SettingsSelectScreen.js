@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, SectionList } from 'react-native';
 import { Icon, ListItem, Divider } from 'react-native-elements';
-import { connect } from 'react-redux';
-import colors from './config/colors';
 
 
 class SettingsSelectScreen extends Component {

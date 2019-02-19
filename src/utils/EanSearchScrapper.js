@@ -1,6 +1,6 @@
 import cheerio from 'react-native-cheerio';
 
-const BASE_URL = 'https://www.ean-search.org/perl/ean-search.pl'
+const BASE_URL = 'https://www.ean-search.org/perl/ean-search.pl';
 
 class EanSearchScrapper {
   constructor(props) {
@@ -19,7 +19,6 @@ class EanSearchScrapper {
       });
 
       this.textResponse = await response.text();
-      console.log("response:\n" + this.textResponse);
 
       let productName = this.getProductNameFromHTMLResponse(this.textResponse, productStr);
       let photoUrl = null;
@@ -34,20 +33,9 @@ class EanSearchScrapper {
   }
 
   getProductNameFromHTMLResponse(response, eanCode) {
-    const $ = cheerio.load(response)
-    let productName = "";
-    productName = $("a", "#main").find.text();
-    console.log(productName);
-    return productName;
+    const $ = cheerio.load(response);
+    return $("a", "#main").find.text();
   }
-}
-
-function objToQueryString(obj) {
-  const keyValues = [];
-  for (const key in obj) {
-    keyValues.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
-  }
-  return keyValues.join('&');
 }
 
 export default EanSearchScrapper

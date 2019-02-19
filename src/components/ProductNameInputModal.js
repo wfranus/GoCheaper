@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+
 import InputModal from './InputModal'
 
 class ProductNameInputModal extends Component {

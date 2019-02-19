@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
-import { Button, Input, } from 'react-native-elements'
+import { StyleSheet, View } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 import Modal from "react-native-modal";
 import colors from './config/colors';
 

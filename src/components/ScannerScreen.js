@@ -1,19 +1,10 @@
 'use strict';
 import React, { Component } from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Vibration,
-  Platform,
-  Button,
-  View
-} from 'react-native';
+import { StyleSheet, Vibration, Platform, View } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { Icon } from 'react-native-elements';
-import { NavigationActions } from 'react-navigation'
-import { connect } from "react-redux";
+import { connect } from "react-redux"
+
 import {setProductProp, resetProduct} from "../actions/productActions"
 import {turnOnCamera, turnOffCamera} from "../actions/cameraActions"
 
@@ -62,7 +53,6 @@ class ScannerScreen extends Component {
   }
 
   onBarCodeRead (e) {
-    console.log("BARCODE!")
     // return if code already scanned
     if (this.props.barCode === e.data) {
       return null;

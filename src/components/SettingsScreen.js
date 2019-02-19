@@ -1,16 +1,10 @@
 'use strict';
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  SectionList,
-  Alert
-} from 'react-native';
-import { Icon, ListItem, Divider, CheckBox } from 'react-native-elements';
+import { StyleSheet, SectionList, Alert } from 'react-native';
+import { Icon, ListItem, Divider } from 'react-native-elements';
 import { connect } from 'react-redux';
+
 import {
-  setOption,
   setAllegroSortOption,
   setAllegroFilterOption,
   resetToDefaults
@@ -38,9 +32,6 @@ class SettingsScreen extends Component {
           getValue: () => this.props.allegroFilterOptions.offerType,
           type: "select",
           availableOptions: [
-            // "kup teraz",
-            // "aukcja",
-            // "bez znaczenia",
             "buyNow",
             "auction"
           ],
@@ -57,9 +48,6 @@ class SettingsScreen extends Component {
           getValue: () => this.props.allegroFilterOptions.condition,
           type: "select",
           availableOptions: [
-            // "nowy",
-            // "używany",
-            // "bez znaczenia",
             "new",
             "used"
           ],
@@ -99,13 +87,6 @@ class SettingsScreen extends Component {
           getValue: () => this.props.allegroSortOptions.sortType,
           type: "select",
           availableOptions: [
-            // "cenie",
-            // "cenie z dostawą",
-            // "czasie do zakończenia",
-            // "czasie wystawienia",
-            // "popularności",
-            // "nazwie",
-            // "trafności"
             "price",
             "priceDelivery",
             "endingTime",
@@ -121,8 +102,6 @@ class SettingsScreen extends Component {
           getValue: () => this.props.allegroSortOptions.sortOrder,
           type: "select",
           availableOptions: [
-            // "rosnąco",
-            // "malejąco",
             "asc",
             "desc"
           ],
@@ -153,8 +132,9 @@ class SettingsScreen extends Component {
           break;
         case 'button':
           this.setOption(section.id, item.name, null);
+          break;
         default:
-        break;
+          break;
       }
   }
 

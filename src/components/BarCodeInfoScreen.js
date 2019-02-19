@@ -1,18 +1,15 @@
 'use strict';
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { Icon, Button, Divider } from 'react-native-elements';
-import colors from './config/colors';
+import { StyleSheet, Text, View } from 'react-native';
+import { Icon, Button } from 'react-native-elements';
 import { connect } from "react-redux";
+
+import colors from './config/colors';
 import Loader from './Loader';
-import PriceInputModal from './PriceInputModal'
-import ProductNameInputModal from './ProductNameInputModal'
+import PriceInputModal from './PriceInputModal';
+import ProductNameInputModal from './ProductNameInputModal';
 import ProductFinder from '../utils/ProductFinder';
-import {setProductProp} from "../actions/productActions"
+import {setProductProp} from "../actions/productActions";
 
 class BarCodeInfoScreen extends Component {
 
@@ -33,7 +30,7 @@ class BarCodeInfoScreen extends Component {
       showPriceModal: false,
       showNameModal: false,
       isReadyToSearch: false
-    }
+    };
 
     this.ProductFinder = new ProductFinder();
     this.ProductFinder.find.bind(this);

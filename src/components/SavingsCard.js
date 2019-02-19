@@ -1,15 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-  Animated,
-  Easing,
-  Platform
-} from 'react-native';
-import { Icon, Button, Badge, PricingCard } from 'react-native-elements';
+import { StyleSheet, Text, View, Animated, Easing, Platform } from 'react-native';
+import { Button } from 'react-native-elements';
 import AnimateNumber from 'react-native-animate-number';
 
 class SavingsCard extends Component {

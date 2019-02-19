@@ -16,7 +16,7 @@ const initialState = {
 
 const SettingsReducer = (state = initialState, action) => {
   const {type, key, value} = action;
-  let nextState = {}
+  let nextState = {};
 
   switch (type) {
     case 'SET_OPTION':
@@ -47,6 +47,6 @@ const SettingsReducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default SettingsReducer;

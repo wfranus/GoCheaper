@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+
 import InputModal from './InputModal'
 
 class PriceInputModal extends Component {
@@ -19,7 +18,7 @@ class PriceInputModal extends Component {
     // change comma to dot symbol
     let newText = '';
     let hasDelimeter = false;
-    let maxLength = this.maxPriceStrLength
+    let maxLength = this.maxPriceStrLength;
 
     for (var i=0; i < text.length && i < maxLength; i++) {
         if ('0123456789'.indexOf(text[i]) > -1 ) {
